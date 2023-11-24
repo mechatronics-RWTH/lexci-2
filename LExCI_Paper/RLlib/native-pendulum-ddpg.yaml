@@ -1,0 +1,61 @@
+##
+# RLlib configuration file for training a DDPG agent in the pendulum
+# environment. To start a training, type the following into the terminal:
+#     >>> rllib train --config-file=/path/to/native-pendulum-ddpg.yaml
+# Depending on the software versions you have installed, you may need to edit
+# l. 414 of ray/rllib/utils/pre_checks/env.py in your Python environment to
+#     >>>     elif not isinstance(done, bool):
+# so that RLlib doesn't crash.
+#
+# File:   native-pendulum-ddpg.py
+# Author: Kevin Badalian (badalian_k@mmp.rwth-aachen.de)
+#         Teaching and Research Area Mechatronics in Mobile Propulsion (MMP)
+#         RWTH Aachen University
+# Date:   2023-10-18
+#
+#
+# Copyright 2023 Teaching and Research Area Mechatronics in Mobile Propulsion,
+#                RWTH Aachen University
+#
+# Licensed under the Apache License, Version 2.0 (the "License"); you may not
+# use this file except in compliance with the License. You may obtain a copy of
+# the License at: http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations under
+# the License.
+#
+
+native-pendulum-ddpg:
+    env: Pendulum-v1
+    run: DDPG
+    stop:
+        timesteps_total: 1000000
+    config:
+        # Config file parameters that are overwritten by the LExCI
+        num_workers: 0
+        rollout_fragment_length: 64
+        framework: tf2
+        use_state_preprocessor: False
+        _disable_execution_plan_api: True
+        timesteps_per_iteration: 0
+        learning_starts: 64
+        # Config file parameters
+        actor_hiddens: [64, 64]
+        actor_hidden_activation: relu
+        critic_hiddens: [64, 64]
+        critic_hidden_activation: relu
+        replay_buffer_config:
+            capacity: 10000
+        store_buffer_in_checkpoints: True
+        train_batch_size: 64
+        gamma: 0.99
+        actor_lr: 0.001
+        critic_lr: 0.001
+        use_huber: True
+        huber_threshold: 1.0
+        l2_reg: 0.000001
+        tau: 0.001
+        target_network_update_freq: 0
