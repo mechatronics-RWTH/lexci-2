@@ -1,0 +1,13 @@
+name: onnx2rlblock
+
+dependencies:
+  - python=3.9.15
+  - pip
+  - pip:
+    - tensorflow
+    - tensorflow-probability
+    - tensorflow-addons
+    - onnx
+    - onnx-tf
+    - tf2onnx
+
