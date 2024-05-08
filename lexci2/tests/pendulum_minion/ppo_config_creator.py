@@ -1,6 +1,6 @@
 """Script for creating the universal PPO master's configuration file.
 
-File:   tests/pendulum_minion/ppo_config_creator.py
+File:   lexci2/tests/pendulum_minion/ppo_config_creator.py
 Author: Kevin Badalian (badalian_k@mmp.rwth-aachen.de)
         Teaching and Research Area Mechatronics in Mobile Propulsion (MMP)
         RWTH Aachen University

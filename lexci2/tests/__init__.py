@@ -1,6 +1,6 @@
 """Initializer of the `tests` package.
 
-File:   tests/__init__.py
+File:   lexci2/tests/__init__.py
 Author: Kevin Badalian (badalian_k@mmp.rwth-aachen.de)
 Date:   2022-06-01
 

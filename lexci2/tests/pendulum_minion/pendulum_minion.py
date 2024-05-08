@@ -1,6 +1,6 @@
 """Minion for the Pendulum environment.
 
-File:   tests/pendulum_minion/pendulum_minion.py
+File:   lexci2/tests/pendulum_minion/pendulum_minion.py
 Author: Kevin Badalian (badalian_k@mmp.rwth-aachen.de)
         Teaching and Research Area Mechatronics in Mobile Propulsion (MMP)
         RWTH Aachen University
