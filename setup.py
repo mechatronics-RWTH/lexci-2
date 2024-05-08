@@ -79,7 +79,7 @@ class LexciInstallationCommand(install):
 
         # Apply the patch
         cmd = f"cd {ray_path} && git apply {patch_file_name}"
-        subprocess.run(cmd, shell=True, check=True)
+        subprocess.run(cmd, shell=True, check=False)
 
 
 def main() -> None:
