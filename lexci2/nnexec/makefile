@@ -157,3 +157,5 @@ libnnexec: $(OBJS)
 clean:
 	rm $(OBJS) libnnexec.so
 
+clean_objs:
+	rm $(OBJS)

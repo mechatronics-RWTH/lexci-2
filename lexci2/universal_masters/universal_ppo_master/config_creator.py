@@ -1,6 +1,6 @@
 """Script for creating the universal PPO master's configuration file.
 
-File:   config_creator.py
+File:   lexci2/universal_masters/universal_ppo_master/config_creator.py
 Author: Kevin Badalian (badalian_k@mmp.rwth-aachen.de)
         Teaching and Research Area Mechatronics in Mobile Propulsion (MMP)
         RWTH Aachen University
@@ -19,7 +19,6 @@ under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
-
 
 import sys
 import argparse
