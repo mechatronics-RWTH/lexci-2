@@ -157,7 +157,7 @@ def main() -> None:
             "gputil (==1.4.0)",
             "asammdf (==7.3.14)",
             "pydantic (==1.10.12)",
-            "pywin32 (==300.10)",
+            "pywin32 (==300.0)",
         ]
         package_data = {}
         entry_points = {}
