@@ -1,0 +1,10 @@
+# vim
+*.swp
+
+# Python
+__pycache__/
+*.py[cod]
+
+# C/C++
+*.o
+*.so
