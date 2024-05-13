@@ -47,7 +47,7 @@ facilitate writing Minions.
 
 1. Open a PowerShell or Anaconda prompt.
 2. Activate the virtual environment.
-3. Run `python.exe -m pip pip install pip==22.0.4` and then
+3. Run `python.exe -m pip install pip==22.0.4` and then
    `pip install setuptools==58.1.0 wheel==0.38.4` as newer versions of these
    packages may not be able to install LExCI's dependencies.
 4. Download or clone this repository and `cd` to its location.
