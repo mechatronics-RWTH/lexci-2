@@ -15,9 +15,21 @@ That's because i) the setup script demands fixed versions of third-party
 packages and ii) because `ray` (one of LExCI's dependencies) is patched during
 installation.
 
+
 #### venv
 
-TODO
+1. Install Python 3.9.15 or above as well as `venv` on your system.
+2. Create a folder for your virtual environment(s) in your home directory by
+   typing `mkdir ~/.venv` into a terminal or PowerShell. You can choose a
+   different location if you so prefer.
+3. Create the environment proper with `python3 -m venv ~/.venv/lexci2`
+   (on Linux) or `python.exe -m venv ~/.venv/lexci2` (on Windows).
+4. Activate the virtual environment with `source ~/.venv/lexci2/bin/activate`
+   (on Linux) or `~/.venv/lexci2/Scripts/activate` (on Windows).
+
+Should you want to remove the virtual environment, simply delete
+`~/.venv/lexci2`.
+
 
 #### Anaconda
 
@@ -26,6 +38,7 @@ TODO
   Run `conda activate lexci2` to activate it.
 * Type `conda deactivate` to deactivate the environment and
   `conda env remove --name lexci2` if you wish to delete it.
+
 
 ### Linux
 
