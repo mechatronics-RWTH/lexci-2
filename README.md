@@ -12,7 +12,8 @@ You are *highly* encouraged to install LExCI in a virtual environment using
 [venv](https://docs.python.org/3/library/venv.html) or
 [Anaconda](https://docs.anaconda.com/free/anaconda/)/[Miniconda](https://docs.anaconda.com/free/miniconda/).
 That's because i) the setup script demands fixed versions of third-party
-packages and ii) because `ray` is patched during installation.
+packages and ii) because `ray` (one of LExCI's dependencies) is patched during
+installation.
 
 #### venv
 
@@ -37,6 +38,9 @@ TODO
 4. Download or clone this repository and `cd` to its location.
 5. Run `pip install -v .`.
 
+To uninstall LExCI, open a terminal, activate its virtual environment, and type
+`pip uninstall lexci-2`.
+
 
 ### Windows
 
@@ -56,6 +60,9 @@ facilitate writing Minions.
    package version for your MATLAB installation. All available versions are
    listed [here](https://pypi.org/project/matlabengine/#history). This step can
    be skipped if you don't plan to automate MATLAB/Simulink through LExCI.
+
+To uninstall LExCI, open a PowerShell or an Anaconda prompt, activate its
+virtual environment, and type `pip uninstall lexci-2`.
 
 
 ## Publications
