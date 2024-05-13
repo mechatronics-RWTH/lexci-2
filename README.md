@@ -17,7 +17,7 @@ dependencies and ii) because the `ray` package is patched during installation.
 1. Install required software packages by typing
    `apt install gcc gpp g++ gdb git` into a terminal.
 2. Activate the virtual environment.
-3. Run `python3 -m pip pip install pip==22.0.4` and then
+3. Run `python3 -m pip install pip==22.0.4` and then
    `pip install setuptools==58.1.0 wheel==0.38.4` as newer versions of these
    packages may not be able to install LExCI's dependencies.
 4. Download or clone this repository and `cd` to its location.
