@@ -22,7 +22,10 @@ specific language governing permissions and limitations under the License.
 
 import os
 import platform
+import site
 import subprocess
+import shutil
+import pathlib
 import logging
 
 from distutils.core import setup
@@ -50,8 +53,9 @@ class LexciInstallationCommand(install):
         # Run the standard installation procedure
         super().run()
 
-        # If on Linux, patch RLlib
+        # If on Linux, explicitly copy `libnnexec.so` and patch RLlib
         if is_linux:
+            self._copy_libnnexec()
             self._patch_rllib()
 
     def _build_libnnexec(self) -> None:
@@ -62,6 +66,26 @@ class LexciInstallationCommand(install):
         )
         cmd = f"cd {path} && make -j`nproc` && make clean_objs"
         subprocess.run(cmd, shell=True, check=True)
+
+    def _copy_libnnexec(self) -> None:
+        """Manually copy `libnnexec.so` into its intended destination as
+        setuptools fails to do that if the shared library isn't already present
+        by the time the script is run. Thus, one doesn't have to run the
+        installation twice.
+        """
+
+        # Define source and target for copying `libnnexec.so`
+        source = os.path.join(
+            os.path.abspath(os.path.dirname(__file__)),
+            "lexci2/nnexec/libnnexec.so",
+        )
+        destination = os.path.join(site.getsitepackages()[0], "lexci2/nnexec")
+
+        # Create the destination folder
+        pathlib.Path(destination).mkdir(parents=True, exist_ok=True)
+
+        # Copy
+        shutil.copy(source, destination)
 
     def _patch_rllib(self) -> None:
         """Patch RLlib."""
