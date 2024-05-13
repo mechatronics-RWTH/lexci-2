@@ -6,11 +6,25 @@ Version 2 of the **L**earning and **Ex**periencing **C**ycle **I**nterface
 
 ## Installation
 
+### Virtual Environment
+
 You are *highly* encouraged to install LExCI in a virtual environment using
 [venv](https://docs.python.org/3/library/venv.html) or
 [Anaconda](https://docs.anaconda.com/free/anaconda/)/[Miniconda](https://docs.anaconda.com/free/miniconda/).
-That's because i) the setup script demands fixed versions of LExCI's
-dependencies and ii) because the `ray` package is patched during installation.
+That's because i) the setup script demands fixed versions of third-party
+packages and ii) because `ray` is patched during installation.
+
+#### venv
+
+TODO
+
+#### Anaconda
+
+* Open a terminal (on Linux) or Anaconda prompt (on Windows) and type
+  `conda create --name lexci2 python=3.9.15` in order to create the environment.
+  Run `conda activate lexci2` to activate it.
+* Type `conda deactivate` to deactivate the environment and
+  `conda env remove --name lexci2` if you wish to delete it.
 
 ### Linux
 
@@ -38,14 +52,18 @@ facilitate writing Minions.
    packages may not be able to install LExCI's dependencies.
 4. Download or clone this repository and `cd` to its location.
 5. Run `pip install -v .`.
+6. Type `pip install matlabengine==VERSION` where `VERSION` is the latest
+   package version for your MATLAB installation. All available versions are
+   listed [here](https://pypi.org/project/matlabengine/#history). This step can
+   be skipped if you don't plan to automate MATLAB/Simulink through LExCI.
 
 
 ## Publications
 
 - [Badalian, K., Koch, L., Brinkmann, T., Picerno, M., Wegener, M., Lee, S. Y., & Andert, J. (2023). LExCI: A Framework for Reinforcement Learning with Embedded Systems. arXiv preprint arXiv:2312.02739](https://arxiv.org/pdf/2312.02739)
 
-If you use LExCI in your scientific work, please cite (the pre-print version of)
-our LExCI paper:
+If you use LExCI in your research, please cite (the pre-print version of) its
+paper:
 
     @article{badalian2023lexci,
         title={LExCI: A Framework for Reinforcement Learning with Embedded Systems},
