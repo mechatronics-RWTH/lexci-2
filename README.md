@@ -18,14 +18,17 @@ installation.
 
 #### venv
 
-1. Install Python 3.9.15 or above as well as `venv` on your system.
+1. Install Python 3.9.15 on your system.
 2. Create a folder for your virtual environment(s) in your home directory by
    typing `mkdir ~/.venv` into a terminal or PowerShell. You can choose a
    different location if you so prefer.
-3. Create the environment proper with `python3 -m venv ~/.venv/lexci2`
-   (on Linux) or `python.exe -m venv ~/.venv/lexci2` (on Windows).
+3. Create the environment proper with `python3 -m venv ~/.venv/lexci2`. On
+   Windows, you need to expand `~`, i.e. replace it with
+   `C:\Users\YOUR_USERNAME`.
 4. Activate the virtual environment with `source ~/.venv/lexci2/bin/activate`
-   (on Linux) or `~/.venv/lexci2/Scripts/activate` (on Windows).
+   on Linux or `~/.venv/lexci2/Scripts/Activate.ps1` on Windows. For the latter,
+   you may have to
+   [change the execution policy of the PowerShell](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.security/set-executionpolicy?view=powershell-7.4).
 
 Should you want to remove the virtual environment, simply delete
 `~/.venv/lexci2`.
@@ -49,7 +52,7 @@ Should you want to remove the virtual environment, simply delete
    `pip install setuptools==58.1.0 wheel==0.38.4` as newer versions of these
    packages may not be able to install LExCI's dependencies.
 4. Download or clone this repository and `cd` to its location.
-5. Run `pip install -v .`.
+5. Run `pip install .`.
 
 To uninstall LExCI, open a terminal, activate its virtual environment, and type
 `pip uninstall lexci-2`.
@@ -64,15 +67,15 @@ facilitate writing Minions.
 
 1. Open a PowerShell or Anaconda prompt.
 2. Activate the virtual environment.
-3. Run `python.exe -m pip install pip==22.0.4` and then
-   `pip install setuptools==58.1.0 wheel==0.38.4` as newer versions of these
+3. Run `python3 -m pip install pip==22.0.4` and then
+   `pip install setuptools==58.1.0 wheel==0.38.4` since newer versions of these
    packages may not be able to install LExCI's dependencies.
 4. Download or clone this repository and `cd` to its location.
-5. Run `pip install -v .`.
+5. Run `pip install .`.
 6. Type `pip install matlabengine==VERSION` where `VERSION` is the latest
    package version for your MATLAB installation. All available versions are
    listed [here](https://pypi.org/project/matlabengine/#history). This step can
-   be skipped if you don't plan to automate MATLAB/Simulink through LExCI.
+   be skipped if you don't plan to automate MATLAB/Simulink.
 
 To uninstall LExCI, open a PowerShell or an Anaconda prompt, activate its
 virtual environment, and type `pip uninstall lexci-2`.
@@ -82,7 +85,7 @@ virtual environment, and type `pip uninstall lexci-2`.
 
 - [Badalian, K., Koch, L., Brinkmann, T., Picerno, M., Wegener, M., Lee, S. Y., & Andert, J. (2023). LExCI: A Framework for Reinforcement Learning with Embedded Systems. arXiv preprint arXiv:2312.02739](https://arxiv.org/pdf/2312.02739)
 
-If you use LExCI in your research, please cite (the pre-print version of) its
+If you use LExCI for your research, please cite (the pre-print version of) this
 paper:
 
     @article{badalian2023lexci,
