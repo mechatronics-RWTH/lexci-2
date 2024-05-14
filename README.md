@@ -1,7 +1,12 @@
 # LExCI 2
 
-Version 2 of the **L**earning and **Ex**periencing **C**ycle **I**nterface
-(LExCI).
+The **L**earning and **Ex**periencing **C**ycle **I**nterface (LExCI) is a
+framework for reinforcement learning (RL) with embedded systems. It bridges the
+gap between established, traditional RL-libraries and embedded devices with
+their inherent limitations and unique requirements. Specifically, it utilises
+[Ray/RLlib](https://github.com/ray-project/ray) for training agents and
+[TensorFlow](https://github.com/tensorflow/tensorflow)/[TensorFlow Lite Micro](https://github.com/tensorflow/tflite-micro)
+to model their neural networks.
 
 
 ## Installation
@@ -85,7 +90,7 @@ virtual environment, and type `pip uninstall lexci-2`.
 
 - [Badalian, K., Koch, L., Brinkmann, T., Picerno, M., Wegener, M., Lee, S. Y., & Andert, J. (2023). LExCI: A Framework for Reinforcement Learning with Embedded Systems. arXiv preprint arXiv:2312.02739](https://arxiv.org/pdf/2312.02739)
 
-If you use LExCI for your research, please cite (the pre-print version of) this
+If you use LExCI for your research, please cite (the pre-print version of) its
 paper:
 
     @article{badalian2023lexci,
@@ -97,7 +102,7 @@ paper:
     }
 
 
-## License
+## Licence
 
-LExCI 2 is licensed under the
+LExCI 2 is licenced under the
 [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0.txt).
