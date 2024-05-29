@@ -100,6 +100,12 @@ class OffPolicyAgent(Agent):
         raise NotImplementedError
 
     @abstractmethod
+    def clear_replay_memory(self) -> None:
+        """Clear the replay buffer of the agent."""
+
+        raise NotImplementedError
+
+    @abstractmethod
     def get_replay_memory_size(self) -> int:
         """Get the number of experiences in the replay memory buffer.
 

@@ -33,6 +33,10 @@ import ray.rllib.agents.ddpg as ddpg
 from ray.rllib.agents.ddpg.lexci_ddpg import LexciDdpgTrainer
 from ray.rllib.policy.sample_batch import SampleBatch
 from ray.rllib.evaluation.sample_batch_builder import SampleBatchBuilder
+from ray.rllib.execution.buffers.replay_buffer import (
+    ReplayBuffer,
+    PrioritizedReplayBuffer,
+)
 import tensorflow as tf
 import tensorflow.keras
 from keras.engine.functional import Functional
@@ -248,6 +252,29 @@ class DdpgAgent(OffPolicyAgent):
         """
 
         self._trainer.add_to_replay_memory(sample_batch)
+
+    def clear_replay_memory(self) -> None:
+        """Clear the replay buffer of the agent."""
+
+        # Get the current buffer
+        buffers = self._trainer.local_reaplay_buffers
+        dpb = buffers.replay_buffers["default_policy"]
+        capacity = buffers.capacity
+        state = buffers.get_state()
+
+        # Replace the current buffer with a new, empty replay buffer
+        if type(dpb) == ReplayBuffer:
+            buffers.replay_buffers["default_policy"] = ReplayBuffer(capacity)
+        elif type(dpb) == PrioritizedReplayBuffer:
+            alpha = dpb._alpha
+            buffers.replay_buffers["default_policy"] = PrioritizedReplayBuffer(
+                capacity, alpha
+            )
+
+        # Update the state
+        state["num_added"] = 0
+        buffers.set_state(state)
+        # TODO: Is there anything else we need to update?
 
     def get_replay_memory_size(self) -> int:
         """Get the number of experiences in the replay memory buffer.
