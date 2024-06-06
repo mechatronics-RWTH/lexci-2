@@ -23,16 +23,13 @@
  * the License.
  */
 
-
 #include "NeuralNetwork.hh"
 
 #include <cstring>
 
-
-
-
-NeuralNetwork::NeuralNetwork(const uint8_t* ptr_nnData, size_t nnDataLen,
-    size_t tensorArenaSize)
+NeuralNetwork::NeuralNetwork(const uint8_t* ptr_nnData,
+                             size_t nnDataLen,
+                             size_t tensorArenaSize)
 {
   // Copy the bytes of the neural network
   sptr_nnData = std::unique_ptr<uint8_t>(new uint8_t[nnDataLen]);
@@ -40,92 +37,79 @@ NeuralNetwork::NeuralNetwork(const uint8_t* ptr_nnData, size_t nnDataLen,
 
   // Create the error reporter
   sptr_microErrorReporter = std::unique_ptr<tflite::MicroErrorReporter>(
-      new tflite::MicroErrorReporter());
- 
+    new tflite::MicroErrorReporter());
+
   // Create the resolver
-  sptr_resolver = std::unique_ptr<tflite::AllOpsResolver>(
-      new tflite::AllOpsResolver());
+  sptr_resolver =
+    std::unique_ptr<tflite::AllOpsResolver>(new tflite::AllOpsResolver());
 
   // Allocate memory for the tensor arena
   sptr_tensorArena = std::unique_ptr<uint8_t>(new uint8_t[tensorArenaSize]);
 
   // Create the interpreter
   sptr_interpreter = std::unique_ptr<tflite::MicroInterpreter>(
-      new tflite::MicroInterpreter(::tflite::GetModel(sptr_nnData.get()),
-      *sptr_resolver, sptr_tensorArena.get(), tensorArenaSize,
-      sptr_microErrorReporter.get()));
+    new tflite::MicroInterpreter(::tflite::GetModel(sptr_nnData.get()),
+                                 *sptr_resolver,
+                                 sptr_tensorArena.get(),
+                                 tensorArenaSize,
+                                 sptr_microErrorReporter.get()));
   sptr_interpreter->AllocateTensors();
 }
 
-
-
-
-size_t NeuralNetwork::getNumInputLayers() const
+size_t
+NeuralNetwork::getNumInputLayers() const
 {
   return sptr_interpreter->inputs_size();
 }
 
-
-
-
-size_t NeuralNetwork::getInputLayerSize(size_t inputLayerIdx) const
+size_t
+NeuralNetwork::getInputLayerSize(size_t inputLayerIdx) const
 {
   // An input layer with n nodes has shape 1xn. Hence, `data[0] = 1` and
   // `data[1] = n`.
   return sptr_interpreter->input(inputLayerIdx)->dims->data[1];
 }
 
-
-
-
-size_t NeuralNetwork::getNumOutputLayers() const
+size_t
+NeuralNetwork::getNumOutputLayers() const
 {
   return sptr_interpreter->outputs_size();
 }
 
-
-
-
-size_t NeuralNetwork::getOutputLayerSize(size_t outputLayerIdx) const
+size_t
+NeuralNetwork::getOutputLayerSize(size_t outputLayerIdx) const
 {
   // An output layer with n nodes has shape 1xn. Hence, `data[0] = 1` and
   // `data[1] = n`.
   return sptr_interpreter->output(outputLayerIdx)->dims->data[1];
 }
 
-
-
-
-void NeuralNetwork::setInputData(size_t inputLayerIdx,
-    const float* ptr_inputData, size_t inputDataLen)
+void
+NeuralNetwork::setInputData(size_t inputLayerIdx,
+                            const float* ptr_inputData,
+                            size_t inputDataLen)
 {
   TfLiteTensor* ptr_inputLayer = sptr_interpreter->input(inputLayerIdx);
 
-  for(size_t i = 0; i < inputDataLen; i++)
-  {
+  for (size_t i = 0; i < inputDataLen; i++) {
     ptr_inputLayer->data.f[i] = ptr_inputData[i];
   }
 }
 
-
-
-
-void NeuralNetwork::execute()
+void
+NeuralNetwork::execute()
 {
   sptr_interpreter->Invoke();
 }
 
-
-
-
-void NeuralNetwork::getOutputData(size_t outputLayerIdx, float* ptr_outputData,
-    size_t outputDataLen) const
+void
+NeuralNetwork::getOutputData(size_t outputLayerIdx,
+                             float* ptr_outputData,
+                             size_t outputDataLen) const
 {
   TfLiteTensor* ptr_outputLayer = sptr_interpreter->output(outputLayerIdx);
 
-  for(size_t i = 0; i < outputDataLen; i++)
-  {
+  for (size_t i = 0; i < outputDataLen; i++) {
     ptr_outputData[i] = ptr_outputLayer->data.f[i];
   }
 }
-

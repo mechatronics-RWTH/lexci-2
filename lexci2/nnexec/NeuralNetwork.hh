@@ -23,21 +23,14 @@
  * the License.
  */
 
-
 #pragma once
-
-
-
 
 #include "tensorflow/lite/micro/all_ops_resolver.h"
 #include "tensorflow/lite/micro/micro_error_reporter.h"
 #include "tensorflow/lite/micro/micro_interpreter.h"
 
-#include <memory>
 #include <cstdint>
-
-
-
+#include <memory>
 
 /**
  * Helper class for creating and executing TensorFlow Lite Micro neural
@@ -54,7 +47,6 @@ private:
   std::unique_ptr<uint8_t> sptr_tensorArena;
   std::unique_ptr<tflite::MicroInterpreter> sptr_interpreter;
 
-
 public:
   /**
    * Constructor.
@@ -63,8 +55,9 @@ public:
    * @param[in] nnDataLen Size of the neural network bytes [1]
    * @param[in] tensorArenaSize Size of the tensor arena [B]. Default: 1000000 B
    */
-  NeuralNetwork(const uint8_t* ptr_nnData, size_t nnDataLen,
-      size_t tensorArenaSize = 1000000);
+  NeuralNetwork(const uint8_t* ptr_nnData,
+                size_t nnDataLen,
+                size_t tensorArenaSize = 1000000);
 
   /**
    * Get the number of input layers.
@@ -105,8 +98,9 @@ public:
    * @param[in] ptr_inputData Input data to set
    * @param[in] inputDataLen Size of the input data
    */
-  void setInputData(size_t inputLayerIdx, const float* ptr_inputData,
-      size_t inputDataLen);
+  void setInputData(size_t inputLayerIdx,
+                    const float* ptr_inputData,
+                    size_t inputDataLen);
 
   /**
    * Execute the neural network.
@@ -116,7 +110,7 @@ public:
   /**
    * Get the output data of the neural network.
    */
-  void getOutputData(size_t outputLayerIdx, float* ptr_outputData,
-      size_t outputDataLen) const;
+  void getOutputData(size_t outputLayerIdx,
+                     float* ptr_outputData,
+                     size_t outputDataLen) const;
 };
-
