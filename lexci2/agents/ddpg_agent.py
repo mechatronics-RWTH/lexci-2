@@ -257,7 +257,7 @@ class DdpgAgent(OffPolicyAgent):
         """Clear the replay buffer of the agent."""
 
         # Get the current buffer
-        buffers = self._trainer.local_reaplay_buffers
+        buffers = self._trainer.local_replay_buffer
         dpb = buffers.replay_buffers["default_policy"]
         capacity = buffers.capacity
         state = buffers.get_state()
