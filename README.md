@@ -88,17 +88,20 @@ virtual environment, and type `pip uninstall lexci-2`.
 
 ## Publications
 
-- [Badalian, K., Koch, L., Brinkmann, T., Picerno, M., Wegener, M., Lee, S. Y., & Andert, J. (2023). LExCI: A Framework for Reinforcement Learning with Embedded Systems. arXiv preprint arXiv:2312.02739](https://arxiv.org/pdf/2312.02739)
+- [Badalian, K., Koch, L., Brinkmann, T., Picerno, M., Wegener, M., Lee, S.-Y., Andert, J.: LExCI: A framework for reinforcement learning with embedded systems. Applied Intelligence (2024) https://doi.org/10.1007/s10489-024-05573-0](https://link.springer.com/content/pdf/10.1007/s10489-024-05573-0.pdf)
 
-If you use LExCI for your research, please cite (the pre-print version of) its
-paper:
+If you use LExCI for your research, please cite our paper:
 
-    @article{badalian2023lexci,
-        title={LExCI: A Framework for Reinforcement Learning with Embedded Systems},
+    @article{Badalian2024,
         author={Badalian, Kevin and Koch, Lucas and Brinkmann, Tobias and Picerno, Mario and Wegener, Marius and Lee, Sung-Yong and Andert, Jakob},
-        journal={arXiv preprint arXiv:2312.02739},
-        year={2023},
-        url={https://arxiv.org/pdf/2312.02739}
+        year={2024},
+        month={06},
+        day={26},
+        title={{LE}x{CI}: {A} framework for reinforcement learning with embedded systems},
+        journal={Applied Intelligence},
+        issn={1573-7497},
+        url={https://doi.org/10.1007/s10489-024-05573-0},
+        doi={10.1007/s10489-024-05573-0}
     }
 
 
