@@ -60,7 +60,8 @@ In order to create and activate LExCI's environment, do the following:
     if you wish. In that case, don't forget to adapt the following commands
     accordingly.
 03. Create the environment proper with `python3.9 -m venv ~/.venv/lexci2`.
-04. Activate the environment with `source ~/.venv/lexci2/bin/activate`.
+04. Activate the environment with `source ~/.venv/lexci2/bin/activate`. The
+    command line prompt should start with `(lexci2)` now.
 
 The virtual environment can be deactivated by typing `deactivate`. Should you
 want to remove it altogether, simply delete `~/.venv/lexci2`. Note that the
@@ -93,7 +94,8 @@ internally takes care of setting up different Python versions for you.
 03. Open a terminal (on Linux) or an Anaconda prompt (on Windows) and type
     `conda create --name lexci2 python=3.9.15` to create the virtual
     environment.
-04. Run `conda activate lexci2` to activate the environment.
+04. Run `conda activate lexci2` to activate the environment. The command line
+    prompt should start with `(lexci2)` now.
 
 You can return to the base environment by typing `conda deactivate`. To delete
 the whole virtual environment, run `conda env remove --name lexci2`.
@@ -135,7 +137,8 @@ the whole virtual environment, run `conda env remove --name lexci2`.
     Alternatively, you can download the repository as a zip file from GitHub's
     web interface. Make sure to choose the right tag first, though.
 
-05. Type `pip install .` to start the setup procedure.
+05. Type `pip install .` to start the setup procedure. It takes a couple of
+    minutes to complete.
 
 To uninstall LExCI, open a terminal, activate its virtual environment, and type
 `pip uninstall lexci-2`.
@@ -185,3 +188,10 @@ the framework is possible which, nevertheless, is helpful when writing Minions.
 
 To uninstall LExCI, open a terminal, activate its virtual environment, and type
 `pip uninstall lexci-2`.
+
+
+## Notes
+
+This how-to was written for the following operating systems:
+- Debian GNU/Linux 12 "bookworm"
+- Microsoft Windows 10

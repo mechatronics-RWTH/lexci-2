@@ -1,6 +1,6 @@
 # First Training
 
-Whether you want to familiarise yourself with LExCI or you need to verify that
+Whether you want to familiarise yourself with LExCI or you'd like to verify that
 everything went smoothly during installation, the pendulum swing-up problem is a
 great place to start. It's the environment that was tackled in the
 [LExCI paper](https://link.springer.com/article/10.1007/s10489-024-05573-0) and,
