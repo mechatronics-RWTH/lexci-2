@@ -11,9 +11,14 @@ to model their neural networks.
 
 ## Installation
 
+This section summarises LExCI's installation process. For a detailed guide,
+consult the
+[documentation](https://github.com/mechatronics-RWTH/lexci-2/blob/main/documentation/01_installation.md).
+
+
 ### Virtual Environment
 
-You are *highly* encouraged to install LExCI in a virtual environment using
+It is *highly* recommended to install LExCI in a virtual environment using
 [venv](https://docs.python.org/3/library/venv.html) or
 [Anaconda](https://docs.anaconda.com/free/anaconda/)/[Miniconda](https://docs.anaconda.com/free/miniconda/).
 That's because i) the setup script demands fixed versions of third-party
@@ -56,7 +61,8 @@ Should you want to remove the virtual environment, simply delete
 3. Run `python3 -m pip install pip==22.0.4` and then
    `pip install setuptools==58.1.0 wheel==0.38.4` as newer versions of these
    packages may not be able to install LExCI's dependencies.
-4. Download or clone this repository and `cd` to its location.
+4. Download or clone this repository and `cd` to its location. Check out a
+   version tag and do not use the `main` branch!
 5. Run `pip install .`.
 
 To uninstall LExCI, open a terminal, activate its virtual environment, and type
@@ -75,7 +81,8 @@ facilitate writing Minions.
 3. Run `python3 -m pip install pip==22.0.4` and then
    `pip install setuptools==58.1.0 wheel==0.38.4` since newer versions of these
    packages may not be able to install LExCI's dependencies.
-4. Download or clone this repository and `cd` to its location.
+4. Download or clone this repository and `cd` to its location. Check out a
+   version tag and do not use the `main` branch!
 5. Run `pip install .`.
 6. Type `pip install matlabengine==VERSION` where `VERSION` is the latest
    package version for your MATLAB installation. All available versions are
@@ -88,7 +95,7 @@ virtual environment, and type `pip uninstall lexci-2`.
 
 ## Publications
 
-- [Badalian, K., Koch, L., Brinkmann, T., Picerno, M., Wegener, M., Lee, S.-Y., Andert, J.: LExCI: A framework for reinforcement learning with embedded systems. Applied Intelligence (2024) https://doi.org/10.1007/s10489-024-05573-0](https://link.springer.com/content/pdf/10.1007/s10489-024-05573-0.pdf)
+- [Badalian, K., Koch, L., Brinkmann, T., Picerno, M., Wegener, M., Lee, S.-Y., Andert, J.: LExCI: A framework for reinforcement learning with embedded systems. Applied Intelligence (2024) https://doi.org/10.1007/s10489-024-05573-0](https://link.springer.com/article/10.1007/s10489-024-05573-0)
 
 If you use LExCI for your research, please cite our paper:
 
