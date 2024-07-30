@@ -40,18 +40,18 @@ In order to create and activate LExCI's environment, do the following:
     02. As an administrator, install the software packages you'll need for
         building:
 
-          ```
-          apt install build-essential gcc gpp g++ gdb libssl-dev zlib1g-dev libncurses5-dev libncursesw5-dev libreadline-dev libsqlite3-dev libgdbm-dev libdb5.3-dev libbz2-dev libexpat1-dev liblzma-dev tk-dev libffi-dev uuid-dev
-          ```
+        ```
+        apt install build-essential gcc gpp g++ gdb libssl-dev zlib1g-dev libncurses5-dev libncursesw5-dev libreadline-dev libsqlite3-dev libgdbm-dev libdb5.3-dev libbz2-dev libexpat1-dev liblzma-dev tk-dev libffi-dev uuid-dev
+        ```
 
     03. `cd` to the extracted directory containing the source code.
     04. Run these commands as an administrator:
         
-          ```
-          ./configure
-          make -j$(nproc --all)
-          make altinstall
-          ```
+        ```
+        ./configure
+        make -j$(nproc --all)
+        make altinstall
+        ```
 
         Note that `make` is executed with the target `altinstall`. This ensures
         that your base installation is not overwritten.
