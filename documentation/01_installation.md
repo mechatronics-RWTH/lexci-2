@@ -112,11 +112,12 @@ the whole virtual environment, run `conda env remove --name lexci2`.
 
 02. Activate LExCI's virtual environment. See above for the command.
 03. Downgrade `pip`, `setuptools`, and `wheel` since newer versions aren't able
-    to process the dependencies of the LExCI framework:
+    to process the dependencies of the LExCI framework. Also install the version
+    of NumPy that LExCI needs.
 
     ```
     python3.9 -m pip install pip==22.0.4
-    pip3.9 install setuptools==58.1.0 wheel==0.38.4
+    pip install setuptools==58.1.0 wheel==0.38.4 numpy==1.26.4
     ```
 
 04. Navigate to the destination of the repository on your computer and clone it:
@@ -137,11 +138,11 @@ the whole virtual environment, run `conda env remove --name lexci2`.
     Alternatively, you can download the repository as a zip file from GitHub's
     web interface. Make sure to choose the right tag first, though.
 
-05. Type `pip3.9 install .` to start the setup procedure. It takes a couple of
+05. Type `pip install .` to start the setup procedure. It takes a couple of
     minutes to complete.
 
 To uninstall LExCI, open a terminal, activate its virtual environment, and type
-`pip3.9 uninstall lexci-2`.
+`pip uninstall lexci-2`.
 
 
 ## Installing LExCI on Windows
@@ -154,11 +155,12 @@ the framework is possible which, nevertheless, is helpful when writing Minions.
     PowerShell (when using venv) or an Anaconda prompt.
 02. Activate the virtual environment with the respective command above.
 03. Downgrade `pip`, `setuptools`, and `wheel` since newer versions aren't able
-    to process the dependencies of the LExCI framework:
+    to process the dependencies of the LExCI framework. Also install the version
+    of NumPy that LExCI needs.
 
     ```
     python3.9 -m pip install pip==22.0.4
-    pip3.9 install setuptools==58.1.0 wheel==0.38.4
+    pip install setuptools==58.1.0 wheel==0.38.4 numpy==1.26.4
     ```
 
 04. Navigate to the destination of the repository on your computer and clone it:
@@ -179,15 +181,15 @@ the framework is possible which, nevertheless, is helpful when writing Minions.
     Alternatively, you can download the repository as a zip file from GitHub's
     web interface. Make sure to choose the right tag first, though.
 
-05. Type `pip3.9 install .` to start the setup procedure.
+05. Type `pip install .` to start the setup procedure.
 
 06. If you intend to automate MATLAB/Simulink, type
-    `pip3.9 install matlabengine==VERSION` where `VERSION` is the latest package
+    `pip install matlabengine==VERSION` where `VERSION` is the latest package
     version for your MATLAB installation. All available versions are listed
     [here](https://pypi.org/project/matlabengine/#history).
 
 To uninstall LExCI, open a terminal, activate its virtual environment, and type
-`pip3.9 uninstall lexci-2`.
+`pip uninstall lexci-2`.
 
 
 ## Notes
