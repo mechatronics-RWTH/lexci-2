@@ -130,6 +130,42 @@ class DdpgAgent(OffPolicyAgent):
               Path to the model h5-file to import.
         """
 
+        # TODO: Check whether this method can be deleted.
+        raise NotImplementedError
+
+    def get_models(self) -> dict[str, Functional]:
+        """Get all models of the agent, i.e. not only its policy NN but also
+        value function approximators etc.
+
+        Returns:
+            - _: dict[str, Functional]:
+                  A dictionary with all models of the agent.
+        """
+
+        model = self._trainer.get_policy().model
+        target_model = self._trainer.get_policy().target_model
+        return {
+            "q_model": model.q_model,
+            "twin_q_model": model.twin_q_model,
+            "policy_model": model.policy_model,
+            "target_q_model": target_model.q_model,
+            "target_twin_q_model": target_model.twin_q_model,
+            "target_policy_model": target_model.policy_model,
+        }
+
+    def set_models(self, models: dict[str, Functional]) -> None:
+        """Set all models of the agent, i.e. not only its policy NN but also
+        value function approximators etc.
+
+        Arguments:
+            - models: dict[str, Functional]
+                  A dictionary containing the new models of the agent.
+
+        Raises:
+            - ValueError:
+                  - If `models` is incomplete.
+        """
+
         # TODO
         raise NotImplementedError
 

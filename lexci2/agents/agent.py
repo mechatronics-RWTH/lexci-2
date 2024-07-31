@@ -180,6 +180,81 @@ class Agent(metaclass=ABCMeta):
 
         self._trainer._iteration = cycle_no
 
+    @abstractmethod
+    def get_models(self) -> dict[str, Functional]:
+        """Get all models of the agent, i.e. not only its policy NN but also
+        value function approximators etc.
+
+        Returns:
+            - _: dict[str, Functional]:
+                  A dictionary with all models of the agent.
+        """
+
+        raise NotImplementedError
+
+    @abstractmethod
+    def set_models(self, models: dict[str, Functional]) -> None:
+        """Set all models of the agent, i.e. not only its policy NN but also
+        value function approximators etc.
+
+        Arguments:
+            - models: dict[str, Functional]
+                  A dictionary containing the new models of the agent.
+
+        Raises:
+            - ValueError:
+                  - If `models` is incomplete.
+        """
+
+        raise NotImplementedError
+
+    def import_models(self, model_folder_name: str) -> None:
+        """Import all models of an agent from h5-files in a specific folder.
+
+        Arguments:
+            - model_folder_name: str
+                  Path to the folder containing the h5-files.
+        """
+
+        model_folder_name = os.path.abspath(model_folder_name)
+        models = self.get_models()
+
+        # Import the model files
+        imported_models = {}
+        for k in models:
+            model_file_name = os.path.join(model_folder_name, f"{k}.h5")
+            model = tf.keras.models.load_model(model_file_name)
+            imported_models[k] = model
+
+        # Overwrite the agent's models
+        self.set_models(imported_models)
+
+    def export_models(self, model_folder_name: str) -> None:
+        """Export all models of the agent as h5-files.
+
+        Arguments:
+            - model_folder_name: str
+                  Path to the folder where the h5-files shall be stored.
+
+        Raises:
+            - ValueError:
+                  - If the folder `model_folder_name` already exists.
+        """
+
+        # Create the folder
+        model_folder_name = os.path.abspath(model_folder_name)
+        if os.path.exists(model_folder_name):
+            raise ValueError(
+                f"The folder '{model_folder_name}' already exists."
+            )
+        os.makedirs(model_folder_name)
+
+        # Export the individual models of the agent
+        models = self.get_models()
+        for k, v in models.items():
+            model_file_name = os.path.join(model_folder_name, f"{k}.h5")
+            v.save(model_file_name, save_format="h5")
+
     def get_nn(self) -> Functional:
         """Get the current policy neural network of the agent.
 
