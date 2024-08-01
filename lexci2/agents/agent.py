@@ -221,9 +221,12 @@ class Agent(metaclass=ABCMeta):
 
         # Import the model files
         imported_models = {}
-        for k in models:
-            model_file_name = os.path.join(model_folder_name, f"{k}.h5")
-            model = tf.keras.models.load_model(model_file_name)
+        for k, v in models.items():
+            if v is None:
+                model = None
+            else:
+                model_file_name = os.path.join(model_folder_name, f"{k}.h5")
+                model = tf.keras.models.load_model(model_file_name)
             imported_models[k] = model
 
         # Overwrite the agent's models
@@ -252,8 +255,11 @@ class Agent(metaclass=ABCMeta):
         # Export the individual models of the agent
         models = self.get_models()
         for k, v in models.items():
-            model_file_name = os.path.join(model_folder_name, f"{k}.h5")
-            v.save(model_file_name, save_format="h5")
+            # Make sure that the model is not `None`. This is important because
+            # some algorithms have optional models (e.g. DDPG's twin Q-model).
+            if v is not None:
+                model_file_name = os.path.join(model_folder_name, f"{k}.h5")
+                v.save(model_file_name, save_format="h5")
 
     def get_nn(self) -> Functional:
         """Get the current policy neural network of the agent.

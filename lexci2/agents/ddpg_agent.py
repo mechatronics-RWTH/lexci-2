@@ -153,12 +153,12 @@ class DdpgAgent(OffPolicyAgent):
             "target_policy_model": target_model.policy_model,
         }
 
-    def set_models(self, models: dict[str, Functional]) -> None:
+    def set_models(self, new_models: dict[str, Functional]) -> None:
         """Set all models of the agent, i.e. not only its policy NN but also
         value function approximators etc.
 
         Arguments:
-            - models: dict[str, Functional]
+            - new_models: dict[str, Functional]
                   A dictionary containing the new models of the agent.
 
         Raises:
@@ -166,8 +166,17 @@ class DdpgAgent(OffPolicyAgent):
                   - If `models` is incomplete.
         """
 
-        # TODO
-        raise NotImplementedError
+        # Overwrite the models
+        model = self._trainer.get_policy().model
+        model.q_model = new_models.get("q_model")
+        model.twin_q_model = new_models.get("twin_q_model")
+        model.policy_model = new_models.get("policy_model")
+
+        # Overwrite the target models
+        target_model = self._trainer.get_policy().target_model
+        target_model.q_model = new_models.get("target_q_model")
+        target_model.twin_q_model = new_models.get("target_twin_q_model")
+        target_model.policy_model = new_models.get("target_policy_model")
 
     def _create_batch(self, cycle: Cycle) -> SampleBatch:
         """Postprocess cycle data and convert it into a `SampleBatch`.

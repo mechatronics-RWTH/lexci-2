@@ -377,9 +377,8 @@ class Master:
             if self._cycle_no % self._validation_interval == 0:
                 # Save NN
                 self._agent.save_checkpoint_file(self._checkpoint_dir)
-                self._agent.export_nn_to_file(
-                    os.path.join(self._nn_h5_dir, f"Cycle_{self._cycle_no}.h5"),
-                    "keras",
+                self._agent.export_models(
+                    os.path.join(self._nn_h5_dir, f"Cycle_{self._cycle_no}")
                 )
                 # Run the validation
                 try:
