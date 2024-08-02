@@ -13,7 +13,7 @@ to model their neural networks.
 
 This section summarises LExCI's installation process. For a detailed guide,
 consult the
-[documentation](https://github.com/mechatronics-RWTH/lexci-2/blob/main/documentation/01_installation.md).
+[documentation](https://github.com/mechatronics-RWTH/lexci-2/blob/main/documentation/02_installation.md).
 
 
 ### Virtual Environment
