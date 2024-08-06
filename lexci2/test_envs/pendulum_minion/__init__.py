@@ -1,6 +1,6 @@
 """Initializer of the `pendulum_minion` package.
 
-File:   lexci2/tests/pendulum_minion/__init__.py
+File:   lexci2/test_envs/pendulum_minion/__init__.py
 Author: Kevin Badalian (badalian_k@mmp.rwth-aachen.de)
 Date:   2024-05-08
 

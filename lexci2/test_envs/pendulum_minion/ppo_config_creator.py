@@ -1,10 +1,10 @@
-"""Script for creating the universal DDPG master's configuration file.
+"""Script for creating the universal PPO master's configuration file.
 
-File:   lexci2/tests/pendulum_minion/ddpg_config_creator.py
+File:   lexci2/test_envs/pendulum_minion/ppo_config_creator.py
 Author: Kevin Badalian (badalian_k@mmp.rwth-aachen.de)
         Teaching and Research Area Mechatronics in Mobile Propulsion (MMP)
         RWTH Aachen University
-Date:   2023-07-27
+Date:   2023-07-24
 
 
 Copyright 2023 Teaching and Research Area Mechatronics in Mobile Propulsion,
@@ -31,8 +31,8 @@ from typing import Any
 # Parse command line arguments
 arg_parser = argparse.ArgumentParser(
     description=(
-        "Export the Universal DDPG LExCI 2 Master's configuration to a JSON"
-        + " file."
+        "Export the Universal PPO"
+        " LExCI 2 Master's configuration to a JSON file."
     )
 )
 arg_parser.add_argument("output_file", type=str, help="Output file to write.")
@@ -44,17 +44,15 @@ master_config = {}
 # =========================== MAKE ADJUSTMENTS HERE ============================#
 master_config["obs_size"] = 3
 master_config["action_size"] = 1
+master_config["action_type"] = "continuous"
 master_config["addr"] = "0.0.0.0"
 master_config["port"] = 5555
-master_config["num_experiences_per_cycle"] = 600
 master_config["mailbox_buffer_size"] = 1 * 1024**3
 master_config["min_num_minions"] = 1
 master_config["max_num_minions"] = 2
 master_config["minion_job_timeout"] = 3600.0
 master_config["minion_params"] = {
     "render": False,
-    "INITIAL_STDEV": 0.5,
-    "STDEV_DECAY_FACTOR": 0.925,
 }
 master_config["nn_format"] = "tflite"
 master_config["nn_size"] = 64 * 1024**1
@@ -62,13 +60,6 @@ master_config["output_dir"] = "~/lexci_results"
 master_config["b_save_training_data"] = False
 master_config["b_save_sample_batches"] = False
 master_config["validation_interval"] = 5
-master_config["num_replay_trainings"] = 0
-master_config["perc_replay_trainings"] = 0.25
-master_config["num_exp_before_replay_training"] = (
-    4 * master_config["num_experiences_per_cycle"]
-)
-master_config["offline_data_import_folder"] = ""
-master_config["b_offline_training_only"] = False
 master_config["checkpoint_file"] = ""
 master_config["model_h5_folder"] = ""
 # If the documentation string isn't empty, the universal Master will create a
@@ -79,42 +70,37 @@ master_config["doc"] = ""
 
 
 # PPO configuration dictionary
-import ray.rllib.agents.ddpg as ddpg
+import ray.rllib.agents.ppo as ppo
 
-ddpg_config = copy.deepcopy(ddpg.DEFAULT_CONFIG)
+ppo_config = copy.deepcopy(ppo.DEFAULT_CONFIG)
 # =========================== MAKE ADJUSTMENTS HERE ============================#
-ddpg_config["actor_hiddens"] = [64, 64]
-ddpg_config["actor_hidden_activation"] = "relu"
-ddpg_config["critic_hiddens"] = [64, 64]
-ddpg_config["critic_hidden_activation"] = "relu"
-ddpg_config["replay_buffer_config"]["capacity"] = 10000
-ddpg_config["store_buffer_in_checkpoints"] = True
-ddpg_config["train_batch_size"] = 64
-# ddpg_config["no_done_at_end"] = True
-ddpg_config["gamma"] = 0.99
-ddpg_config["actor_lr"] = 0.001
-ddpg_config["critic_lr"] = 0.001
-ddpg_config["use_huber"] = True
-ddpg_config["huber_threshold"] = 1.0
-ddpg_config["l2_reg"] = 1e-6
-# Update target networks using `tau*policy + (1 - tau)*target_policy`
-ddpg_config["tau"] = 0.001
-ddpg_config["target_network_update_freq"] = 0
+ppo_config["model"]["fcnet_hiddens"] = [64, 64]
+ppo_config["model"]["fcnet_activation"] = "tanh"
+ppo_config["train_batch_size"] = 512  # = Number of experiences per cycle
+ppo_config["sgd_minibatch_size"] = 64
+ppo_config["num_sgd_iter"] = 6
+ppo_config["gamma"] = 0.95
+ppo_config["lambda"] = 0.1
+ppo_config["clip_param"] = 0.3
+ppo_config["vf_clip_param"] = 10000
+ppo_config["lr"] = 0.0003
+ppo_config["kl_target"] = 0.01
+# ppo_config["lr_schedule"] = [[0, 0.0001], [1e9, 1e-5]]
 # ==============================================================================#
 # Remove keys that aren't JSON-serializable
 keys_to_remove = []
-for k, v in ddpg_config.items():
+for k, v in ppo_config.items():
     if v is not None and type(v) not in [dict, list, str, int, float, bool]:
         print(
-            f"Removing key '{k}' with value '{v}' from the DDPG configuration as"
-            + " it isn't JSON-serializable."
+            f"Removing key '{k}' with value '{v}' from the PPO configuration as"
+            " it isn't JSON-serializable."
         )
         keys_to_remove.append(k)
 for k in keys_to_remove:
-    del ddpg_config[k]
+    del ppo_config[k]
 
 
 # Write the JSON file
-config = {"master_config": master_config, "ddpg_config": ddpg_config}
+config = {"master_config": master_config, "ppo_config": ppo_config}
 with open(cli_args.output_file, "w") as f:
     json.dump(config, f, indent=2)
