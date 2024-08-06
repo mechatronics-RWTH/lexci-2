@@ -1,3 +1,48 @@
+diff --git a/rllib/agents/ddpg/ddpg_tf_model.py b/rllib/agents/ddpg/ddpg_tf_model.py
+index 56ed6ca465..6846ea790f 100644
+--- a/rllib/agents/ddpg/ddpg_tf_model.py
++++ b/rllib/agents/ddpg/ddpg_tf_model.py
+@@ -110,27 +110,21 @@ class DDPGTFModel(TFModelV2):
+         def build_q_net(name, observations, actions):
+             # For continuous actions: Feed obs and actions (concatenated)
+             # through the NN.
+-            q_net = tf.keras.Sequential(
+-                [
+-                    tf.keras.layers.Concatenate(axis=1),
+-                ]
+-                + [
+-                    tf.keras.layers.Dense(
+-                        units=units,
+-                        activation=critic_hidden_activation,
+-                        name="{}_hidden_{}".format(name, i),
+-                    )
+-                    for i, units in enumerate(critic_hiddens)
+-                ]
+-                + [
+-                    tf.keras.layers.Dense(
+-                        units=1, activation=None, name="{}_out".format(name)
+-                    )
+-                ]
+-            )
++            input1 = tf.keras.Input(tensor=observations, name="model_out")
++            input2 = tf.keras.Input(tensor=actions, name="actions")
++            lay = tf.keras.layers.Concatenate(axis=1)([input1, input2])
++            for i, units in enumerate(critic_hiddens):
++                lay = tf.keras.layers.Dense(
++                    units=units,
++                    activation=critic_hidden_activation,
++                    name=f"{name}_hidden_{i}",
++                )(lay)
++            lay = tf.keras.layers.Dense(
++                units=1, activation=None, name=f"{name}_out"
++            )(lay)
+ 
+             q_net = tf.keras.Model(
+-                [observations, actions], q_net([observations, actions])
++                inputs=[input1, input2], outputs=lay, name=name
+             )
+             return q_net
+ 
 diff --git a/rllib/agents/ddpg/lexci_ddpg.py b/rllib/agents/ddpg/lexci_ddpg.py
 new file mode 100644
 index 0000000000..a43b97c74a
