@@ -69,7 +69,7 @@ master_config["num_exp_before_replay_training"] = (
 master_config["offline_data_import_folder"] = ""
 master_config["b_offline_training_only"] = False
 master_config["checkpoint_file"] = ""
-master_config["model_h5"] = ""
+master_config["model_h5_folder"] = ""
 # If the documentation string isn't empty, the universal Master will create a
 # text file called 'Documentation.txt' in the training's log directory and write
 # the content of the string into said file.

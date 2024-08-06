@@ -20,7 +20,6 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
 
-
 from lexci2.utils.continuous_thread import ContinuousThread
 from lexci2.communication.mailbox import Mailbox
 

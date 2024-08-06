@@ -20,7 +20,6 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
 
-
 from lexci2.lexci_env import LexciEnvConfig
 from lexci2.data_containers import Experience, Cycle
 from lexci2.agents.agent import lexci_logger_creator, nn_modifying_method
@@ -95,7 +94,7 @@ class DdpgAgent(OffPolicyAgent):
                   Neural network of the agent.
         """
 
-        return self._trainer.get_policy().model.policy_model
+        return self.get_models()["policy_model"]
 
     def _update_nn_module(self) -> None:
         """Update the neural network module.
@@ -118,20 +117,6 @@ class DdpgAgent(OffPolicyAgent):
         """
 
         return copy.deepcopy(ddpg.DEFAULT_CONFIG)
-
-    def import_model_h5(self, model_h5_file: str) -> None:
-        """Import a model (i.e. a TensorFlow neural network) from an h5-file and
-        overwrite the trainer's model with it.
-
-        TODO: Which network is imported here? The actor, the critic, or both?
-
-        Arguments:
-          - model_h5_file: str
-              Path to the model h5-file to import.
-        """
-
-        # TODO: Check whether this method can be deleted.
-        raise NotImplementedError
 
     def get_models(self) -> dict[str, Functional]:
         """Get all models of the agent, i.e. not only its policy NN but also

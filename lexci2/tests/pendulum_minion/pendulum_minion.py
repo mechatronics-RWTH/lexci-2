@@ -20,7 +20,6 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
 
-
 import lexci2
 from lexci2.minion.minion import Minion
 from lexci2.neural_network_modules.continuous_ppo_neural_network_module import (
