@@ -124,8 +124,8 @@ def main() -> None:
     )
     if config["master_config"]["checkpoint_file"] != "":
         master.restore_checkpoint(config["master_config"]["checkpoint_file"])
-    elif config["master_config"]["model_h5"] != "":
-        master.import_model_h5(config["master_config"]["model_h5"])
+    elif config["master_config"]["model_h5_folder"] != "":
+        master.import_models_h5(config["master_config"]["model_h5_folder"])
 
     # Create a copy of the config file in the log directory
     with open(cli_args.config_json_file, "r") as f:

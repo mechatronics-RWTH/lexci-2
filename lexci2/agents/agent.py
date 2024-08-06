@@ -20,7 +20,6 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
 
-
 from lexci2.lexci_env import LexciEnvConfig, LexciEnv
 from lexci2.data_containers import Cycle
 from lexci2.lexci_input_reader import LexciInputReader
@@ -164,8 +163,8 @@ class Agent(metaclass=ABCMeta):
             self._lexci_env_name, lambda _: LexciEnv(env_config)
         )
 
-        # Placeholder for the neural network module which sub-classes must set
-        # at the end of their initializers by invoking
+        # Placeholder for the neural network module which sub-classes of `Agent`
+        # must set at the end of their initializers by invoking
         # `self._update_nn_module()`
         self._nn_module = None
 
@@ -180,6 +179,88 @@ class Agent(metaclass=ABCMeta):
 
         self._trainer._iteration = cycle_no
 
+    @abstractmethod
+    def get_models(self) -> dict[str, Functional]:
+        """Get all models of the agent, i.e. not only its policy NN but also
+        value function approximators etc.
+
+        Returns:
+            - _: dict[str, Functional]:
+                  A dictionary with all models of the agent.
+        """
+
+        raise NotImplementedError
+
+    @abstractmethod
+    def set_models(self, new_models: dict[str, Functional]) -> None:
+        """Set all models of the agent, i.e. not only its policy NN but also
+        value function approximators etc.
+
+        Arguments:
+            - new_models: dict[str, Functional]
+                  A dictionary containing the new models of the agent.
+
+        Raises:
+            - ValueError:
+                  - If `models` is incomplete.
+        """
+
+        raise NotImplementedError
+
+    def import_models(self, model_folder_name: str) -> None:
+        """Import all models of an agent from h5-files in a specific folder.
+
+        Arguments:
+            - model_folder_name: str
+                  Path to the folder containing the h5-files.
+        """
+
+        model_folder_name = os.path.abspath(model_folder_name)
+        models = self.get_models()
+
+        # Import the model files
+        imported_models = {}
+        for k, v in models.items():
+            if v is None:
+                model = None
+            else:
+                model_file_name = os.path.join(model_folder_name, f"{k}.h5")
+                model = tf.keras.models.load_model(model_file_name)
+            imported_models[k] = model
+
+        # Overwrite the agent's models
+        self.set_models(imported_models)
+
+    def export_models(self, model_folder_name: str) -> None:
+        """Export all models of the agent as h5-files.
+
+        Arguments:
+            - model_folder_name: str
+                  Path to the folder where the h5-files shall be stored.
+
+        Raises:
+            - ValueError:
+                  - If the folder `model_folder_name` already exists.
+        """
+
+        # Create the folder
+        model_folder_name = os.path.abspath(model_folder_name)
+        if os.path.exists(model_folder_name):
+            raise ValueError(
+                f"The folder '{model_folder_name}' already exists."
+            )
+        os.makedirs(model_folder_name)
+
+        # Export the individual models of the agent
+        models = self.get_models()
+        for k, v in models.items():
+            # Make sure that the model is not `None`. This is important because
+            # some algorithms have optional models (e.g. DDPG's twin Q-model).
+            if v is not None:
+                model_file_name = os.path.join(model_folder_name, f"{k}.h5")
+                v.save(model_file_name, save_format="h5")
+
+    @abstractmethod
     def get_nn(self) -> Functional:
         """Get the current policy neural network of the agent.
 
@@ -191,7 +272,7 @@ class Agent(metaclass=ABCMeta):
                   Neural network of the agent.
         """
 
-        return self._trainer.get_policy().model.base_model
+        raise NotImplementedError
 
     def get_nn_module(self) -> NeuralNetworkModule:
         """Get the neural network module of the agent.
@@ -303,18 +384,6 @@ class Agent(metaclass=ABCMeta):
             "^checkpoint-(?P<cycle_no>\d+)$", os.path.basename(checkpoint_file)
         )
         self._trainer._iteration = int(m["cycle_no"])
-
-    @abstractmethod
-    def import_model_h5(self, model_h5_file: str) -> None:
-        """Import a model (i.e. a TensorFlow neural network) from an h5-file and
-        overwrite the trainer's model with it.
-
-        Arguments:
-            - model_h5_file: str
-                  Path to the model h5-file to import.
-        """
-
-        raise NotImplementedError
 
     def export_nn_to_bytes(self, fmt: str) -> bytes:
         """Export the agent's neural network as bytes.

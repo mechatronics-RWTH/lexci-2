@@ -20,7 +20,6 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
 
-
 from lexci2.lexci_env import LexciEnvConfig
 from lexci2.data_containers import Experience, Cycle
 from lexci2.agents.agent import lexci_logger_creator
@@ -77,6 +76,35 @@ class PpoAgent(OnPolicyAgent):
         )
         self._update_nn_module()
 
+    def get_models(self) -> dict[str, Functional]:
+        """Get all models of the agent, i.e. not only its policy NN but also
+        value function approximators etc.
+
+        Returns:
+            - _: dict[str, Functional]:
+                  A dictionary with all models of the agent.
+        """
+
+        model = self._trainer.get_policy().model.base_model
+        return {"policy_vf_model": model}
+
+    def set_models(self, new_models: dict[str, Functional]) -> None:
+        """Set all models of the agent, i.e. not only its policy NN but also
+        value function approximators etc.
+
+        Arguments:
+            - new_models: dict[str, Functional]
+                  A dictionary containing the new models of the agent.
+
+        Raises:
+            - ValueError:
+                  - If `models` is incomplete.
+        """
+
+        self._trainer.get_policy().model.base_model = new_models[
+            "policy_vf_model"
+        ]
+
     def _update_nn_module(self) -> None:
         """Update the neural network module.
 
@@ -104,18 +132,18 @@ class PpoAgent(OnPolicyAgent):
 
         return copy.deepcopy(ppo.DEFAULT_CONFIG)
 
-    def import_model_h5(self, model_h5_file: str) -> None:
-        """Import a model (i.e. a TensorFlow neural network) from an h5-file and
-        overwrite the trainer's model with it.
+    def get_nn(self) -> Functional:
+        """Get the current policy neural network of the agent.
 
-        Arguments:
-            - model_h5_file: str
-                  Path to the model h5-file to import.
+        This method may have to be overwritten for algorithms that don't store
+        the policy NN in `base_model`.
+
+        Returns:
+            - _: Functional
+                  Neural network of the agent.
         """
 
-        self._trainer.get_policy().model.base_model = (
-            tf.keras.models.load_model(model_h5_file)
-        )
+        return self.get_models()["policy_vf_model"]
 
     def _create_batch(self, cycle: Cycle) -> SampleBatch:
         """Postprocess cycle data and convert it into a `SampleBatch`.

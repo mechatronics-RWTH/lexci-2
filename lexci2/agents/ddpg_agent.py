@@ -20,7 +20,6 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
 
-
 from lexci2.lexci_env import LexciEnvConfig
 from lexci2.data_containers import Experience, Cycle
 from lexci2.agents.agent import lexci_logger_creator, nn_modifying_method
@@ -95,7 +94,7 @@ class DdpgAgent(OffPolicyAgent):
                   Neural network of the agent.
         """
 
-        return self._trainer.get_policy().model.policy_model
+        return self.get_models()["policy_model"]
 
     def _update_nn_module(self) -> None:
         """Update the neural network module.
@@ -119,19 +118,50 @@ class DdpgAgent(OffPolicyAgent):
 
         return copy.deepcopy(ddpg.DEFAULT_CONFIG)
 
-    def import_model_h5(self, model_h5_file: str) -> None:
-        """Import a model (i.e. a TensorFlow neural network) from an h5-file and
-        overwrite the trainer's model with it.
+    def get_models(self) -> dict[str, Functional]:
+        """Get all models of the agent, i.e. not only its policy NN but also
+        value function approximators etc.
 
-        TODO: Which network is imported here? The actor, the critic, or both?
-
-        Arguments:
-          - model_h5_file: str
-              Path to the model h5-file to import.
+        Returns:
+            - _: dict[str, Functional]:
+                  A dictionary with all models of the agent.
         """
 
-        # TODO
-        raise NotImplementedError
+        model = self._trainer.get_policy().model
+        target_model = self._trainer.get_policy().target_model
+        return {
+            "q_model": model.q_model,
+            "twin_q_model": model.twin_q_model,
+            "policy_model": model.policy_model,
+            "target_q_model": target_model.q_model,
+            "target_twin_q_model": target_model.twin_q_model,
+            "target_policy_model": target_model.policy_model,
+        }
+
+    def set_models(self, new_models: dict[str, Functional]) -> None:
+        """Set all models of the agent, i.e. not only its policy NN but also
+        value function approximators etc.
+
+        Arguments:
+            - new_models: dict[str, Functional]
+                  A dictionary containing the new models of the agent.
+
+        Raises:
+            - ValueError:
+                  - If `models` is incomplete.
+        """
+
+        # Overwrite the models
+        model = self._trainer.get_policy().model
+        model.q_model = new_models.get("q_model")
+        model.twin_q_model = new_models.get("twin_q_model")
+        model.policy_model = new_models.get("policy_model")
+
+        # Overwrite the target models
+        target_model = self._trainer.get_policy().target_model
+        target_model.q_model = new_models.get("target_q_model")
+        target_model.twin_q_model = new_models.get("target_twin_q_model")
+        target_model.policy_model = new_models.get("target_policy_model")
 
     def _create_batch(self, cycle: Cycle) -> SampleBatch:
         """Postprocess cycle data and convert it into a `SampleBatch`.

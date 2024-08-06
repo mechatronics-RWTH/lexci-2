@@ -20,7 +20,6 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
 
-
 import sys
 import argparse
 import copy
@@ -62,7 +61,7 @@ master_config["b_save_training_data"] = False
 master_config["b_save_sample_batches"] = False
 master_config["validation_interval"] = 5
 master_config["checkpoint_file"] = ""
-master_config["model_h5"] = ""
+master_config["model_h5_folder"] = ""
 # If the documentation string isn't empty, the universal Master will create a
 # text file called 'Documentation.txt' in the training's log directory and write
 # the content of the string into said file.

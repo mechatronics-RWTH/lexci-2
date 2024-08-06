@@ -20,7 +20,6 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
 
-
 from lexci2.agents.agent import Agent
 from lexci2.agents.off_policy_agent import OffPolicyAgent
 from lexci2.master.listener import Listener
@@ -318,17 +317,17 @@ class Master:
         )
         self._cycle_no = int(m["cycle_no"])
 
-    def import_model_h5(self, model_h5_file: str) -> None:
-        """Import a model (i.e. a TensorFlow neural network) from an h5-file and
-        overwrite the agent's model with it.
+    def import_models_h5(self, model_h5_folder_name: str) -> None:
+        """Import models (i.e. TensorFlow neural networks) from h5-files and
+        overwrite the agent's models with them.
 
         Arguments:
-            - model_h5_file: str
-                  Path to the model h5-file to import.
+            - model_h5_folder_name: str
+                  Path to the folder containing the h5-files to import.
         """
 
-        self._agent.import_model_h5(model_h5_file)
-        logger.info(f"Imported model '{model_h5_file}'.")
+        self._agent.import_models(model_h5_folder_name)
+        logger.info(f"Imported model from '{model_h5_folder_name}'.")
 
     def _mainloop(self) -> None:
         """Main loop of the Master."""
@@ -377,9 +376,8 @@ class Master:
             if self._cycle_no % self._validation_interval == 0:
                 # Save NN
                 self._agent.save_checkpoint_file(self._checkpoint_dir)
-                self._agent.export_nn_to_file(
-                    os.path.join(self._nn_h5_dir, f"Cycle_{self._cycle_no}.h5"),
-                    "keras",
+                self._agent.export_models(
+                    os.path.join(self._nn_h5_dir, f"Cycle_{self._cycle_no}")
                 )
                 # Run the validation
                 try:
