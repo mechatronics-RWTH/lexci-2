@@ -190,7 +190,7 @@ def main() -> None:
 
     setup(
         name="lexci-2",
-        version="2.20.0",
+        version="2.21.0",
         description="The Learning and Experiencing Cycle Interface (LExCI).",
         author="Kevin Badalian",
         author_email="badalian_k@mmp.rwth-aachen.de",
