@@ -78,7 +78,7 @@ master_config["doc"] = ""
 
 
 # TD3 configuration dictionary
-import ray.rllib.agents.td3 as td3
+import ray.rllib.agents.ddpg.td3 as td3
 
 td3_config = copy.deepcopy(td3.TD3_DEFAULT_CONFIG)
 # =========================== MAKE ADJUSTMENTS HERE ===========================#

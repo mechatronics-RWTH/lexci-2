@@ -88,7 +88,7 @@ def main() -> None:
     # TD3 agent and its configuration
     td3_config = Td3Agent.get_default_trainer_config()
     td3_config.update(config["td3_config"])
-    agent = Td3Agent("agent0", env_config, ddpg_config)
+    agent = Td3Agent("agent0", env_config, td3_config)
 
     # Create the Master
     start_ray()

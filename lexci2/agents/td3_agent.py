@@ -22,7 +22,7 @@ specific language governing permissions and limitations under the License.
 
 from lexci2.agents.ddpg_agent import DdpgAgent
 
-import ray.rllib.agents.td3 as td3
+import ray.rllib.agents.ddpg.td3 as td3
 
 import copy
 from typing import Any
