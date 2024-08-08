@@ -48,9 +48,10 @@ In order to create and activate LExCI's environment, do the following:
     04. Run these commands as an administrator:
         
         ```
-        ./configure
+        ./configure --enable-shared
         make -j$(nproc --all)
         make altinstall
+        ldconfig
         ```
 
         Note that `make` is executed with the target `altinstall`. This ensures
