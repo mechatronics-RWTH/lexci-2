@@ -64,6 +64,10 @@ Should you want to remove the virtual environment, simply delete
 4. Download or clone this repository and `cd` to its location. Check out a
    version tag and do not use the `main` branch!
 5. Run `pip install .`.
+6. Type `pip install matlabengine==VERSION` where `VERSION` is the latest
+   package version for your MATLAB installation. All available versions are
+   listed [here](https://pypi.org/project/matlabengine/#history). This step can
+   be skipped if you don't plan to automate MATLAB/Simulink.
 
 To uninstall LExCI, open a terminal, activate its virtual environment, and type
 `pip uninstall lexci-2`.
