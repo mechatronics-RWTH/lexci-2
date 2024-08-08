@@ -99,6 +99,7 @@ class LexciInstallationCommand(install):
         )
         # Get the absolute path to where Ray/RLlib has been installed
         import ray
+
         ray_path = os.path.abspath(os.path.dirname(ray.__file__))
 
         # Apply the patch
@@ -170,6 +171,7 @@ def main() -> None:
             "console_scripts": [
                 "Lexci2UniversalPpoMaster = lexci2.universal_masters.universal_ppo_master.universal_ppo_master:main",
                 "Lexci2UniversalDdpgMaster = lexci2.universal_masters.universal_ddpg_master.universal_ddpg_master:main",
+                "Lexci2UniversalTd3Master = lexci2.universal_masters.universal_td3_master.universal_td3_master:main",
             ]
         }
     elif platform_str.startswith("Windows"):

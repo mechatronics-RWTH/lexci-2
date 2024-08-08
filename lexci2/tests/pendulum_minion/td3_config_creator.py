@@ -1,13 +1,13 @@
-"""Script for creating the universal DDPG master's configuration file.
+"""Script for creating the universal TD3 master's configuration file.
 
-File:   lexci2/tests/pendulum_minion/ddpg_config_creator.py
+File:   lexci2/tests/pendulum_minion/td3_config_creator.py
 Author: Kevin Badalian (badalian_k@mmp.rwth-aachen.de)
         Teaching and Research Area Mechatronics in Mobile Propulsion (MMP)
         RWTH Aachen University
-Date:   2023-07-27
+Date:   2024-08-08
 
 
-Copyright 2023 Teaching and Research Area Mechatronics in Mobile Propulsion,
+Copyright 2024 Teaching and Research Area Mechatronics in Mobile Propulsion,
                RWTH Aachen University
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
@@ -31,7 +31,7 @@ from typing import Any
 # Parse command line arguments
 arg_parser = argparse.ArgumentParser(
     description=(
-        "Export the Universal DDPG LExCI 2 Master's configuration to a JSON"
+        "Export the Universal TD3 LExCI 2 Master's configuration to a JSON"
         + " file."
     )
 )
@@ -41,7 +41,7 @@ cli_args = arg_parser.parse_args(sys.argv[1:])
 
 # Master configuration dictrionary
 master_config = {}
-# =========================== MAKE ADJUSTMENTS HERE ============================#
+# =========================== MAKE ADJUSTMENTS HERE ===========================#
 master_config["obs_size"] = 3
 master_config["action_size"] = 1
 master_config["addr"] = "0.0.0.0"
@@ -75,45 +75,49 @@ master_config["model_h5_folder"] = ""
 # text file called 'Documentation.txt' in the training's log directory and write
 # the content of the string into said file.
 master_config["doc"] = ""
-# ==============================================================================#
+
+# =============================================================================#
 
 
-# PPO configuration dictionary
-import ray.rllib.agents.ddpg as ddpg
+# TD3 configuration dictionary
+import ray.rllib.agents.td3 as td3
 
-ddpg_config = copy.deepcopy(ddpg.DEFAULT_CONFIG)
-# =========================== MAKE ADJUSTMENTS HERE ============================#
-ddpg_config["actor_hiddens"] = [64, 64]
-ddpg_config["actor_hidden_activation"] = "relu"
-ddpg_config["critic_hiddens"] = [64, 64]
-ddpg_config["critic_hidden_activation"] = "relu"
-ddpg_config["replay_buffer_config"]["capacity"] = 10000
-ddpg_config["store_buffer_in_checkpoints"] = True
-ddpg_config["train_batch_size"] = 64
-ddpg_config["gamma"] = 0.99
-ddpg_config["actor_lr"] = 0.001
-ddpg_config["critic_lr"] = 0.001
-ddpg_config["use_huber"] = True
-ddpg_config["huber_threshold"] = 1.0
-ddpg_config["l2_reg"] = 1e-6
+td3_config = copy.deepcopy(td3.TD3_DEFAULT_CONFIG)
+# =========================== MAKE ADJUSTMENTS HERE ===========================#
+td3_config["actor_hiddens"] = [64, 64]
+td3_config["actor_hidden_activation"] = "relu"
+td3_config["critic_hiddens"] = [64, 64]
+td3_config["critic_hidden_activation"] = "relu"
+td3_config["replay_buffer_config"]["capacity"] = 10000
+td3_config["store_buffer_in_checkpoints"] = True
+td3_config["train_batch_size"] = 64
+td3_config["gamma"] = 0.99
+td3_config["actor_lr"] = 0.001
+td3_config["critic_lr"] = 0.001
+td3_config["use_huber"] = True
+td3_config["huber_threshold"] = 1.0
 # Update target networks using `tau*policy + (1 - tau)*target_policy`
-ddpg_config["tau"] = 0.001
-ddpg_config["target_network_update_freq"] = 0
-# ==============================================================================#
+td3_config["tau"] = 0.001
+td3_config["target_network_update_freq"] = 0
+td3_config["l2_reg"] = 1e-6
+td3_config["policy_delay"] = 2
+td3_config["target_noise"] = 0.2
+td3_config["target_noise_clip"] = 0.5
+# =============================================================================#
 # Remove keys that aren't JSON-serializable
 keys_to_remove = []
-for k, v in ddpg_config.items():
+for k, v in td3_config.items():
     if v is not None and type(v) not in [dict, list, str, int, float, bool]:
         print(
-            f"Removing key '{k}' with value '{v}' from the DDPG configuration as"
+            f"Removing key '{k}' with value '{v}' from the TD3 configuration as"
             + " it isn't JSON-serializable."
         )
         keys_to_remove.append(k)
 for k in keys_to_remove:
-    del ddpg_config[k]
+    del td3_config[k]
 
 
 # Write the JSON file
-config = {"master_config": master_config, "ddpg_config": ddpg_config}
+config = {"master_config": master_config, "td3_config": td3_config}
 with open(cli_args.output_file, "w") as f:
     json.dump(config, f, indent=2)

@@ -1,6 +1,6 @@
 """Script for creating the universal DDPG master's configuration file.
 
-File:   lexci2/universal_masters/universal_ddpg_master/config_creator.py
+File:   lexci2/universal_masters/universal_ddpg_master/ddpg_config_creator.py
 Author: Kevin Badalian (badalian_k@mmp.rwth-aachen.de)
         Teaching and Research Area Mechatronics in Mobile Propulsion (MMP)
         RWTH Aachen University
@@ -77,7 +77,7 @@ master_config["doc"] = ""
 # =============================================================================#
 
 
-# PPO configuration dictionary
+# DDPG configuration dictionary
 import ray.rllib.agents.ddpg as ddpg
 
 ddpg_config = copy.deepcopy(ddpg.DEFAULT_CONFIG)
