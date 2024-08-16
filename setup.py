@@ -99,7 +99,6 @@ class LexciInstallationCommand(install):
         )
         # Get the absolute path to where Ray/RLlib has been installed
         import ray
-
         ray_path = os.path.abspath(os.path.dirname(ray.__file__))
 
         # Apply the patch
@@ -165,6 +164,8 @@ def main() -> None:
             "gputil (==1.4.0)",
             "asammdf (==7.3.14)",
             "pydantic (==1.10.12)",
+            "psutil (==6.0.0)",
+            "black (==24.8.0)",
         ]
         package_data = {"lexci2": ["nnexec/libnnexec.so"]}
         entry_points = {
@@ -184,6 +185,8 @@ def main() -> None:
             "asammdf (==7.3.14)",
             "pydantic (==1.10.12)",
             "pywin32 (==300.0)",
+            "psutil (==6.0.0)",
+            "black (==24.8.0)",
         ]
         package_data = {}
         entry_points = {}
@@ -192,7 +195,7 @@ def main() -> None:
 
     setup(
         name="lexci-2",
-        version="2.21.0",
+        version="2.22.0",
         description="The Learning and Experiencing Cycle Interface (LExCI).",
         author="Kevin Badalian",
         author_email="badalian_k@mmp.rwth-aachen.de",
