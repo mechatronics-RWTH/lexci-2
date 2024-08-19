@@ -71,7 +71,7 @@ def main() -> None:
         proc = None
         try:
             # Run the Minion
-            cmd = f'/bin/bash -c "{cli_args.virtenv_activation_cmd}'
+            cmd = f'exec /bin/bash -c "{cli_args.virtenv_activation_cmd}'
             cmd += f' && python3.9 {cli_args.minion_file}"'
             proc = subprocess.Popen(cmd, shell=True)
             while True:
