@@ -64,8 +64,8 @@ class LexciInstallationCommand(install):
         path = os.path.join(
             os.path.abspath(os.path.dirname(__file__)), "lexci2/nnexec"
         )
-        cmd = f"cd {path} && make -j`nproc` && make clean_objs"
-        subprocess.run(cmd, shell=True, check=True)
+        cmd = f"make -j`nproc` && make clean_objs"
+        subprocess.run(cmd, shell=True, check=True, cwd=path)
 
     def _copy_libnnexec(self) -> None:
         """Manually copy `libnnexec.so` into its intended destination as
@@ -91,7 +91,7 @@ class LexciInstallationCommand(install):
         """Patch RLlib."""
 
         # Ensure that Ray/RLlib is already installed at this point
-        subprocess.run("pip install ray==1.13.0", shell=True, check=True)
+        subprocess.run(["pip", "install", "ray==1.13.0"], check=True)
 
         # Get the absolute path to the patch file
         patch_file_name = os.path.join(
@@ -102,8 +102,8 @@ class LexciInstallationCommand(install):
         ray_path = os.path.abspath(os.path.dirname(ray.__file__))
 
         # Apply the patch
-        cmd = f"cd {ray_path} && git apply {patch_file_name}"
-        subprocess.run(cmd, shell=True, check=False)
+        cmd = f"git apply {patch_file_name}"
+        subprocess.run(cmd, shell=True, check=False, cwd=ray_path)
 
 
 def main() -> None:
