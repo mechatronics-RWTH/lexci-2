@@ -125,7 +125,8 @@ def main() -> None:
     if platform_str.startswith("Linux"):
         required_packages = [
             # ray[all]
-            "ray (==1.13.0)",
+            # `ray` is installed in `LexciInstallationCommand._patch_rllib()`
+            # "ray (==1.13.0)",
             "pandas (==2.1.1)",
             "pyarrow (==6.0.1)",
             "fsspec (==2024.3.1)",
