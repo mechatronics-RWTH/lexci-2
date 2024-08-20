@@ -127,6 +127,8 @@ def main() -> None:
             # ray[all]
             # `ray` is installed in `LexciInstallationCommand._patch_rllib()`
             # "ray (==1.13.0)",
+            "click (==8.0.4)",
+            "grpcio (==1.43.0)",
             "pandas (==2.1.1)",
             "pyarrow (==6.0.1)",
             "fsspec (==2024.3.1)",
