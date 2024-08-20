@@ -54,7 +54,7 @@ arg_parser = argparse.ArgumentParser(
     description="Minion for the Pendulum environment."
 )
 arg_parser.add_argument(
-    "algorithm", type=str, help="RL algorithm (either 'ppo' or 'ddpg')."
+    "algorithm", type=str, help="RL algorithm (either 'ppo', 'ddpg', or 'td3')."
 )
 cli_args = arg_parser.parse_args(sys.argv[1:])
 
@@ -128,7 +128,7 @@ def print_transition(
             if i < len(means) - 1:
                 s += ", "
         s += "]"
-    elif cli_args.algorithm == "ddpg":
+    elif cli_args.algorithm in ["ddpg", "td3"]:
         s += "\t["
         for i in range(len(action_dist)):
             s += f"{action_dist[i]:+06.2f}"
@@ -166,7 +166,7 @@ def generate_training_data(
         nn_module = ContinuousPpoNeuralNetworkModule(
             env_config, model_bytes, "tflite"
         )
-    elif cli_args.algorithm == "ddpg":
+    elif cli_args.algorithm in ["ddpg", "td3"]:
         nn_module = DdpgNeuralNetworkModule(env_config, model_bytes, "tflite")
     else:
         raise RuntimeError(f"Unknown algorithm '{cli_args.algorithm}'.")
@@ -242,7 +242,7 @@ def generate_validation_data(
         nn_module = ContinuousPpoNeuralNetworkModule(
             env_config, model_bytes, "tflite"
         )
-    elif cli_args.algorithm == "ddpg":
+    elif cli_args.algorithm in ["ddpg", "td3"]:
         nn_module = DdpgNeuralNetworkModule(env_config, model_bytes, "tflite")
     else:
         raise RuntimeError(f"Unknown algorithm '{cli_args.algorithm}'.")

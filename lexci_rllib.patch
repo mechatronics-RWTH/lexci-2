@@ -139,7 +139,7 @@ index 0000000000..a43b97c74a
 +      - _: ResultDict:
 +          Result dictionary of the training iteration.
 +    """
-+    
++
 +    batch_size = self.config["train_batch_size"]
 +    local_worker = self.workers.local_worker()
 +
