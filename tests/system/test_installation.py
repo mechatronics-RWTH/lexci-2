@@ -28,17 +28,16 @@ import tempfile
 import os
 
 
-# The top-level directory of the repository
-TOP_LEVEL_DIR = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "..", "..")
-)
-
-
 class TestInstallation(unittest.TestCase):
     """Test LExCI's setup procedure."""
 
     def test_installation(self) -> None:
         """Install LExCI and check whether there are any failures."""
+
+        # The top-level directory of the repository
+        top_level_dir = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "..", "..")
+        )
 
         # Check whether Python 3.9.15 is installed
         with subprocess.Popen(
@@ -128,9 +127,9 @@ class TestInstallation(unittest.TestCase):
                 stdin=subprocess.PIPE,
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
+                cwd=top_level_dir,
             ) as proc:
                 cmd = f"source {venv_activation_script}"
-                cmd += f" && cd {TOP_LEVEL_DIR}"
                 cmd += " && pip install ."
                 proc.communicate(cmd)
                 self.assertEqual(proc.returncode, 0, "Failed to install LExCI.")
