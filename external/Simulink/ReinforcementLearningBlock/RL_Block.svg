@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:d="http://www.mathworks.com/blockgraphics" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="svg5" width="200" height="200" viewBox="0 0 200.5.5 100.5" inkscape:export-filename="/home/kevin/RWTH_GitLab/lexci-2/logo.png" inkscape:export-xdpi="524.37323" inkscape:export-ydpi="524.37323" inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)" sodipodi:docname="logo.svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:svg="http://www.w3.org/2000/svg">
+	<g id="part" title="part_0" ie-ports="left:simulink*simulink*simulink*simulink,top:simulink,right:simulink,bottom:">
+		<g id="layer1" inkscape:groupmode="layer" inkscape:label="Layer 1">
+			<g id="g1027">
+				<g id="g1008">
+					<ellipse id="path1214" style="fill:#323232;fill-opacity:1;stroke:#000000;stroke-width:0.5;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers" transform="matrix(1,0,0,1,0.25,0.25)" cx="99.75" cy="99.75" rx="50" ry="50"/>
+					<path id="path2328" sodipodi:nodetypes="csc" style="fill:none;stroke:#00008c;stroke-width:8;stroke-linecap:round;paint-order:stroke fill markers" transform="matrix(1,0,0,1,0.25,0.25)" d=" M 76.75,139.59 C 62.52,131.37 53.75,116.18 53.75,99.75 C 53.75,83.32 62.52,68.13 76.75,59.91"/>
+					<path id="path" sodipodi:nodetypes="csc" style="fill:none;stroke:#ffaa00;stroke-width:8;stroke-linecap:round;paint-order:stroke fill markers" transform="matrix(1,0,0,1,0.25,0.25)" d=" M 122.75,59.91 C 136.98,68.13 145.75,83.32 145.75,99.75 C 145.75,116.18 136.98,131.37 122.75,139.59"/>
+				</g>
+				<g id="g1104">
+					<g id="g1090">
+						<path id="path2820" style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" transform="matrix(0.8838383525,0,0,0.8838383525,114.0917674414,24.7864154367)" d=" M -54.47,100.71 V 65.71 H 25.53 L 20.53,70.71 V 67.71 H -52.47 V 100.71 L -54.47,100.71 Z"/>
+						<path id="path3059" style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" transform="matrix(0.8838383525,0,0,0.8838383525,114.0917674414,24.7359107474)" d=" M 25.53,70.71 V 105.71 H -54.47 L -49.47,100.71 V 103.71 H 23.53 V 70.71 L 25.53,70.71 Z"/>
+					</g>
+					<g id="g1086">
+						<path id="path37661" style="fill:none;stroke:#c80000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" transform="matrix(0.8838383525,0,0,0.8838383525,114.3734360159,24.7157088222)" d=" M -47.47,98.71 H -24.15 L -4.48,72.71 H 18.53"/>
+						<g id="text7876" aria-label="LExCI" style="font-size:24.6944px;line-height:1.25;stroke-width:0.264583">
+							<g id="text13982" aria-label="LExCI" style="-inkscape-font-specification:sans-serif;stroke-width:0.0700042">
+								<path id="path23462" style="font-family:'Liberation Mono';-inkscape-font-specification:'Liberation Mono';fill:#ffffff" transform="matrix(0.8838383525,0,0,0.8838383525,10.6889190705,11.7603576639)" d=" M 66.75,107.89 V 91.62 H 69.05 V 106 H 77.15 V 107.88 L 66.75,107.89 Z"/>
+								<path id="path23464" style="font-family:'Liberation Mono';-inkscape-font-specification:'Liberation Mono';fill:#ffffff" transform="matrix(0.8838383525,0,0,0.8838383525,10.5484151051,11.7603576639)" d=" M 80.66,107.89 V 91.62 H 91.74 V 93.5 H 82.96 V 98.59 H 91.01 V 100.45 H 82.96 V 106.01 H 92.23 V 107.89 L 80.66,107.89 Z"/>
+								<path id="path23466" sodipodi:nodetypes="ccccccccccccccc" style="font-family:'Liberation Mono';-inkscape-font-specification:'Liberation Mono';fill:#ffffff" transform="matrix(0.8838383525,0,0,0.8838383525,10.4069001432,11.7277311013)" d=" M 104.77,107.89 L 100.9,102.54 L 97.01,107.89 H 95.84 H 94.67 L 99.67,101.19 L 94.88,94.85 H 97.28 L 100.9,99.93 L 104.49,94.85 H 105.7 H 106.91 L 102.12,101.17 L 107.18,107.9 L 104.77,107.89 Z"/>
+								<path id="path23468" style="font-family:'Liberation Mono';-inkscape-font-specification:'Liberation Mono';fill:#ffffff" transform="matrix(0.8838383525,0,0,0.8838383525,10.2547801231,11.7628829046)" d=" M 112.14,99.68 Q 112.14,102.97 113.16,104.62 Q 114.2,106.26 116.32,106.26 Q 117.54,106.26 118.53,105.44 Q 119.52,104.61 120.21,102.86 L 122.13,103.64 Q 120.33,108.13 116.31,108.13 Q 113.14,108.13 111.43,105.95 Q 109.73,103.77 109.73,99.68 Q 109.73,91.37 116.19,91.37 Q 120.28,91.37 121.81,95.41 L 119.78,96.19 Q 119.33,94.83 118.38,94.04 Q 117.44,93.24 116.2,93.24 Q 114.14,93.24 113.14,94.8 Q 112.15,96.36 112.15,99.67 L 112.14,99.68 Z"/>
+								<path id="path23470" style="font-family:'Liberation Mono';-inkscape-font-specification:'Liberation Mono';fill:#ffffff" transform="matrix(0.8838383525,0,0,0.8838383525,10.0944773646,11.7603576639)" d=" M 125.6,91.62 H 135.52 V 93.5 H 131.71 V 106 H 135.52 V 107.88 H 125.6 V 106 H 129.41 V 93.5 H 125.6 L 125.6,91.62 Z"/>
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+		</g>
+	</g>
+</svg>
