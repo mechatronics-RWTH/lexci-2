@@ -26,6 +26,16 @@ import unittest
 import subprocess
 import tempfile
 import os
+import logging
+
+
+# Create the logger
+logging.basicConfig(
+    level=logging.INFO,
+    datefmt="%Y-%m-%d %H:%M:%S",
+    format="[%(asctime)s %(levelname)s %(name)s] %(message)s",
+)
+logger = logging.getLogger()
 
 
 def install_lexci(top_level_dir_name: str, installation_dir_name: str) -> None:
@@ -48,6 +58,7 @@ def install_lexci(top_level_dir_name: str, installation_dir_name: str) -> None:
     """
 
     # Check whether Python 3.9.15 is installed
+    logger.info("Checking whether Python 3.9.15 is installed...")
     with subprocess.Popen(
         "/bin/bash",
         shell=True,
@@ -58,9 +69,12 @@ def install_lexci(top_level_dir_name: str, installation_dir_name: str) -> None:
     ) as proc:
         outputs, _ = proc.communicate("python3.9 --version")
         if outputs != "Python 3.9.15\n":
+            logger.info("... failed.")
             raise RuntimeError("Python 3.9.15 is not installed on the system.")
+    logger.info("... done.")
 
     # Create the virtual environment
+    logger.info("Creating LExCI's virtual environment...")
     with subprocess.Popen(
         "/bin/bash",
         shell=True,
@@ -73,12 +87,15 @@ def install_lexci(top_level_dir_name: str, installation_dir_name: str) -> None:
         cmd = f"python3.9 -m venv {venv_dir_name}"
         proc.communicate(cmd)
         if proc.returncode != 0:
+            logger.info("... failed.")
             raise RuntimeError("Failed to create the virtual environment.")
         venv_activation_script = os.path.abspath(
             os.path.join(venv_dir_name, "bin/activate")
         )
+    logger.info("... done.")
 
     # Install pip
+    logger.info("Installing the required version of `pip`...")
     with subprocess.Popen(
         "/bin/bash",
         shell=True,
@@ -91,9 +108,15 @@ def install_lexci(top_level_dir_name: str, installation_dir_name: str) -> None:
         cmd += " && python3.9 -m pip install pip==22.0.4"
         proc.communicate(cmd)
         if proc.returncode != 0:
+            logger.info("... failed.")
             raise RuntimeError("Couldn't install the required version of pip.")
+    logger.info("... done.")
 
     # Install/downgrade certain software packages
+    logger.info(
+        "Installing the required versions of `setuptools`, `wheel`, and `numpy`"
+        + "..."
+    )
     with subprocess.Popen(
         "/bin/bash",
         shell=True,
@@ -106,12 +129,15 @@ def install_lexci(top_level_dir_name: str, installation_dir_name: str) -> None:
         cmd += " && pip install setuptools==58.1.0 wheel==0.38.4 numpy==1.26.4"
         proc.communicate(cmd)
         if proc.returncode != 0:
+            logger.info("... failed.")
             raise RuntimeError(
                 "Couldn't install/downgrade to the required versions of"
                 + " setuptools, wheel, and numpy."
             )
+    logger.info("... done.")
 
     # Install LExCI
+    logger.info("Installing LExCI...")
     with subprocess.Popen(
         "/bin/bash",
         shell=True,
@@ -125,7 +151,9 @@ def install_lexci(top_level_dir_name: str, installation_dir_name: str) -> None:
         cmd += " && pip install ."
         proc.communicate(cmd)
         if proc.returncode != 0:
+            logger.info("... failed.")
             raise RuntimeError("Failed to install LExCI.")
+    logger.info("... done.")
 
 
 class TestInstallation(unittest.TestCase):
