@@ -20,23 +20,19 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
 
-import sys
-import argparse
 import copy
-import json
+import logging
 
-from typing import Any
+from lexci2.universal_masters.config_creator import ConfigCreator
 
 
-# Parse command line arguments
-arg_parser = argparse.ArgumentParser(
-    description=(
-        "Export the Universal DDPG"
-        " LExCI 2 Master's configuration to a JSON file."
-    )
+# Create the logger
+logging.basicConfig(
+    level=logging.INFO,
+    datefmt="%Y-%m-%d %H:%M:%S",
+    format="[%(asctime)s %(levelname)s %(name)s] %(message)s",
 )
-arg_parser.add_argument("output_file", type=str, help="Output file to write.")
-cli_args = arg_parser.parse_args(sys.argv[1:])
+logger = logging.getLogger()
 
 
 # Master configuration dictrionary
@@ -78,9 +74,9 @@ master_config["doc"] = ""
 
 
 # DDPG configuration dictionary
-import ray.rllib.agents.ddpg as ddpg
+from ray.rllib.agents.ddpg import DEFAULT_CONFIG
 
-ddpg_config = copy.deepcopy(ddpg.DEFAULT_CONFIG)
+ddpg_config = copy.deepcopy(DEFAULT_CONFIG)
 # =========================== MAKE ADJUSTMENTS HERE ===========================#
 ddpg_config["actor_hiddens"] = [64, 64]
 ddpg_config["actor_hidden_activation"] = "relu"
@@ -96,20 +92,7 @@ ddpg_config["critic_lr"] = 1e-3
 ddpg_config["tau"] = 0.01
 ddpg_config["target_network_update_freq"] = 0
 # =============================================================================#
-# Remove keys that aren't JSON-serializable
-keys_to_remove = []
-for k, v in ddpg_config.items():
-    if v is not None and type(v) not in [dict, list, str, int, float, bool]:
-        print(
-            f"Removing key '{k}' with value '{v}' from the DDPG configuration"
-            + " as it isn't JSON-serializable."
-        )
-        keys_to_remove.append(k)
-for k in keys_to_remove:
-    del ddpg_config[k]
 
 
-# Write the JSON file
-config = {"master_config": master_config, "ddpg_config": ddpg_config}
-with open(cli_args.output_file, "w") as f:
-    json.dump(config, f, indent=2)
+if __name__ == "__main__":
+    ConfigCreator(master_config, ddpg_config, "ddpg").run()

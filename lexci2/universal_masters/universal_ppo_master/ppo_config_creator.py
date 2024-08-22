@@ -20,23 +20,19 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
 
-import sys
-import argparse
 import copy
-import json
+import logging
 
-from typing import Any
+from lexci2.universal_masters.config_creator import ConfigCreator
 
 
-# Parse command line arguments
-arg_parser = argparse.ArgumentParser(
-    description=(
-        "Export the Universal PPO"
-        " LExCI 2 Master's configuration to a JSON file."
-    )
+# Create the logger
+logging.basicConfig(
+    level=logging.INFO,
+    datefmt="%Y-%m-%d %H:%M:%S",
+    format="[%(asctime)s %(levelname)s %(name)s] %(message)s",
 )
-arg_parser.add_argument("output_file", type=str, help="Output file to write.")
-cli_args = arg_parser.parse_args(sys.argv[1:])
+logger = logging.getLogger()
 
 
 # Master configuration dictrionary
@@ -68,9 +64,9 @@ master_config["doc"] = ""
 
 
 # PPO configuration dictionary
-import ray.rllib.agents.ppo as ppo
+from ray.rllib.agents.ppo import DEFAULT_CONFIG
 
-ppo_config = copy.deepcopy(ppo.DEFAULT_CONFIG)
+ppo_config = copy.deepcopy(DEFAULT_CONFIG)
 # =========================== MAKE ADJUSTMENTS HERE ===========================#
 ppo_config["model"]["fcnet_hiddens"] = [16, 16, 16]
 ppo_config["model"]["fcnet_activation"] = "tanh"
@@ -83,20 +79,7 @@ ppo_config["vf_clip_param"] = 1e6
 ppo_config["lr"] = 1e-5
 ppo_config["lr_schedule"] = [[0, 0.0025], [1e9, 1e-5]]
 # =============================================================================#
-# Remove keys that aren't JSON-serializable
-keys_to_remove = []
-for k, v in ppo_config.items():
-    if v is not None and type(v) not in [dict, list, str, int, float, bool]:
-        print(
-            f"Removing key '{k}' with value '{v}' from the PPO configuration as"
-            + " it isn't JSON-serializable."
-        )
-        keys_to_remove.append(k)
-for k in keys_to_remove:
-    del ppo_config[k]
 
 
-# Write the JSON file
-config = {"master_config": master_config, "ppo_config": ppo_config}
-with open(cli_args.output_file, "w") as f:
-    json.dump(config, f, indent=2)
+if __name__ == "__main__":
+    ConfigCreator(master_config, ppo_config, "ppo").run()
