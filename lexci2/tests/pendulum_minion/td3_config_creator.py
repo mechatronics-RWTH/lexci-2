@@ -20,23 +20,19 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
 
-import sys
-import argparse
 import copy
-import json
+import logging
 
-from typing import Any
+from lexci2.universal_masters.config_creator import ConfigCreator
 
 
-# Parse command line arguments
-arg_parser = argparse.ArgumentParser(
-    description=(
-        "Export the Universal TD3 LExCI 2 Master's configuration to a JSON"
-        + " file."
-    )
+# Create the logger
+logging.basicConfig(
+    level=logging.INFO,
+    datefmt="%Y-%m-%d %H:%M:%S",
+    format="[%(asctime)s %(levelname)s %(name)s] %(message)s",
 )
-arg_parser.add_argument("output_file", type=str, help="Output file to write.")
-cli_args = arg_parser.parse_args(sys.argv[1:])
+logger = logging.getLogger()
 
 
 # Master configuration dictrionary
@@ -75,14 +71,13 @@ master_config["model_h5_folder"] = ""
 # text file called 'Documentation.txt' in the training's log directory and write
 # the content of the string into said file.
 master_config["doc"] = ""
-
 # =============================================================================#
 
 
 # TD3 configuration dictionary
-import ray.rllib.agents.ddpg.td3 as td3
+from ray.rllib.agents.ddpg.td3 import TD3_DEFAULT_CONFIG
 
-td3_config = copy.deepcopy(td3.TD3_DEFAULT_CONFIG)
+td3_config = copy.deepcopy(TD3_DEFAULT_CONFIG)
 # =========================== MAKE ADJUSTMENTS HERE ===========================#
 td3_config["actor_hiddens"] = [64, 64]
 td3_config["actor_hidden_activation"] = "relu"
@@ -104,20 +99,7 @@ td3_config["policy_delay"] = 2
 td3_config["target_noise"] = 0.2
 td3_config["target_noise_clip"] = 0.5
 # =============================================================================#
-# Remove keys that aren't JSON-serializable
-keys_to_remove = []
-for k, v in td3_config.items():
-    if v is not None and type(v) not in [dict, list, str, int, float, bool]:
-        print(
-            f"Removing key '{k}' with value '{v}' from the TD3 configuration as"
-            + " it isn't JSON-serializable."
-        )
-        keys_to_remove.append(k)
-for k in keys_to_remove:
-    del td3_config[k]
 
 
-# Write the JSON file
-config = {"master_config": master_config, "td3_config": td3_config}
-with open(cli_args.output_file, "w") as f:
-    json.dump(config, f, indent=2)
+if __name__ == "__main__":
+    ConfigCreator(master_config, td3_config, "td3").run()
