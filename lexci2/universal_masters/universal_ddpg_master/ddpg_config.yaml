@@ -109,7 +109,7 @@ master_config:
 
 
 # Configuration of the RL algorithm
-ddpg:
+ddpg_config:
     # The activation function used in the hidden layers of the actor. This must
     # be either `tanh` or `relu`.
     actor_hidden_activation: relu
@@ -198,7 +198,7 @@ ddpg:
     env_config: {}
     env_task_fn: null
     evaluation_config:
-    explore: false
+        explore: false
     evaluation_duration: 10
     evaluation_duration_unit: episodes
     evaluation_interval: null
