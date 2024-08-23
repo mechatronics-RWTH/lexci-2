@@ -1,0 +1,361 @@
+# Configuration of the Universal Master and its agent
+master_config:
+    # Size of the observation space
+    obs_size: 10
+
+    # Size of the action space
+    action_size: 1
+    
+    # IP address of the Universal Master. If this is set to `0.0.0.0`, it'll
+    # listen on all network devices.
+    addr: 0.0.0.0
+
+    # Port on which the Universal Master shall listen for incoming connections
+    port: 5555
+
+    # The number of experiences to generate in each training cycle
+    num_experiences_per_cycle: 1408
+
+    # The size of the mailbox's buffer [B]
+    mailbox_buffer_size: 1073741824
+
+    # The minimum number of LExCI Minions required for training
+    min_num_minions: 1
+
+    # The maximum number of LExCI Minions that shall be accepted by the
+    # Universal Master
+    max_num_minions: 2
+
+    # The time each Minion has to complete its job [s]. If a Minion takes
+    # longer, its connection is terminated by the Master.
+    minion_job_timeout: 3600.0
+
+    # Parameters that are passed to the Minion with every command, i.e. at the
+    # beginning of every training and validation cycle
+    minion_params:
+        # The initial standard deviation of the Gaussian noise which is added to
+        # the policy's action for exploration
+        INITIAL_STDEV: 0.5
+
+        # The decay factor of the standard deviation. During runtime, the
+        # standard deviation is annealed using the equation
+        #     stdev = INITIAL_STDEV * (STDEV_DECAY_FACTOR ^ cycle_no)
+        # where `cycle_no` is the number of the current LExCI cycle.
+        STDEV_DECAY_FACTOR: 0.925
+
+    # The format of the agent's model(s) (i.e. its neural network(s)). DO NOT
+    # CHANGE THIS!
+    nn_format: tflite
+
+    # Maximum size of the policy model (i.e. the policy's neural network) that
+    # is exchanged between the Master and the Minion(s) [B]. The data is always
+    # padded to this value with zeros.
+    nn_size: 65536
+
+    # The folder where all of the training output shall be saved
+    output_dir: ~/lexci_results
+
+    # Shall training episodes be saved as CSV files containing the observations,
+    # actions, rewards, etc.?
+    b_save_training_data: false
+    
+    # Shall the experience batches be stored on the disk? Set this to `true` if
+    # you want to use data from this training as off-policy data in another
+    # session.
+    b_save_sample_batches: false
+    
+    # Number of cycles between validation runs. During a validation, stochastic
+    # sampling is deactivated in order to assess the agent's performance.
+    validation_interval: 10
+    
+    # The number of training steps per cycle using offline data from the replay
+    # buffer. This parameter (if not 0) takes precedence over
+    # `perc_replay_trainings`.
+    num_replay_trainings: 10
+ 
+    # Percentage of the experiences in the replay buffer that shall be used for
+    # offline training in each cycle. This parameter is ignored if
+    # `num_replay_trainings` is greater than zero.
+    perc_replay_trainings: 0
+    
+    # The number of experiences that must be present in the replay buffer before
+    # offline training starts.
+    num_exp_before_replay_training: 5632
+    
+    # The folder from which offline/off-policy data shall be imported. If set to
+    # an empty string, i.e. to `''`, this option is ignored and nothing is
+    # imported.
+    offline_data_import_folder: ''
+    
+    # Shall the agent train exclusively with off-policy data, i.e. without
+    # actively being used to run episodes? If so, the data must be imported by
+    # setting `offline_data_import_folder`.
+    b_offline_training_only: false
+    
+    # Path to the checkpoint file to restore. If set to an empty string, i.e. to
+    # `''`, no checkpoint will be loaded.
+    checkpoint_file: ''
+    
+    # Path to the folder containing all of the agent's models which shall be
+    # loaded. The models not only include the policy, but also value functions
+    # etc. They are stored per cycle as separate h5-files. If this parameter is
+    # an empty string (i.e. `''`), nothing will be loaded.
+    model_h5_folder: ''
+
+    # If the documentation string isn't empty, the Universal Master will create
+    # a text file called `Documentation.txt` in the training's output directory
+    # and write the content of the string into it.
+    doc: ''
+
+
+# Configuration of the RL algorithm
+td3_config:
+    # The activation function used in the hidden layers of the actor. This must
+    # be either `tanh` or `relu`.
+    actor_hidden_activation: relu
+
+    # Hidden actor layers and their sizes
+    actor_hiddens:
+    - 64
+    - 64
+    
+    # Learning rate of the actor
+    actor_lr: 0.001
+
+    # The activation function used in the hidden layers of the critic. This must
+    # be either `tanh` or `relu`.
+    critic_hidden_activation: relu
+    
+    # Hidden critic layers and their sizes
+    critic_hiddens:
+    - 64
+    - 64
+    
+    # Learning rate of the critic
+    critic_lr: 0.001
+    
+    # Discount factor when calculating the return
+    gamma: 0.95
+
+    # The threshold of the Huber loss. This parameter is ignored if `use_huber`
+    # is set to `false`.
+    huber_threshold: 1.0
+    
+    # Weights for the L2 regularization
+    l2_reg: 0.0
+
+    # Configuration of the replay buffer
+    replay_buffer_config:
+        # Size of the replay buffer, i.e. the number of experiences it can hold
+        capacity: 10000
+        
+        type: MultiAgentReplayBuffer
+
+    # Shall the checkpoints that are generated during training contain the
+    # replay buffer?
+    store_buffer_in_checkpoints: true
+    
+    # The number of training steps (NOT CYCLES!) between target network updates
+    target_network_update_freq: 0
+    
+    # Constant used for polyak averaging, i.e. the target networks are set to:
+    #     tau * policy + (1 - tau) * target_policy
+    tau: 0.01
+    
+    # The size of training batches, i.e. the number of experiences used for a
+    # single training step
+    train_batch_size: 128
+
+    # Shall the Huber loss be used for the critic instead of the squared loss?
+    use_huber: false
+
+    #==========================================================================#
+    # Please consult Ray/RLlib's manual for the parameters beyond this point.  #
+    # Note that some of them have no effect depending on the chosen RL         #
+    # algorithm and that others might be internally overwritten by LExCI.      #
+    #==========================================================================#
+    _disable_action_flattening: false
+    _disable_execution_plan_api: false
+    _disable_preprocessor_api: false
+    _fake_gpus: false
+    _tf_policy_handles_more_than_one_loss: false
+    action_space: null
+    actions_in_input_normalized: false
+    always_attach_evaluation_results: false
+    batch_mode: truncate_episodes
+    buffer_size: 1000000
+    clip_actions: false
+    clip_rewards: false
+    collect_metrics_timeout: -1
+    compress_observations: false
+    create_env_on_driver: false
+    custom_eval_function: null
+    custom_resources_per_worker: {}
+    disable_env_checking: false
+    eager_max_retraces: 20
+    eager_tracing: false
+    env: null
+    env_config: {}
+    env_task_fn: null
+    evaluation_config:
+        explore: false
+    evaluation_duration: 10
+    evaluation_duration_unit: episodes
+    evaluation_interval: null
+    evaluation_num_episodes: -1
+    evaluation_num_workers: 0
+    evaluation_parallel_to_training: false
+
+    # Configuration of RLlib's exploration behavior. This is not used by LExCI.
+    exploration_config:
+        final_scale: 1.0
+        initial_scale: 1.0
+        random_timesteps: 10000
+        scale_timesteps: 1
+        stddev: 0.1
+        type: GaussianNoise
+    
+    explore: true
+    extra_python_environs_for_driver: {}
+    extra_python_environs_for_worker: {}
+    fake_sampler: false
+    framework: tf
+    grad_clip: null
+    horizon: null
+    ignore_worker_failures: false
+    in_evaluation: false
+    input: sampler
+    input_config: {}
+    input_evaluation:
+    - is
+    - wis
+    keep_per_episode_custom_metrics: false
+    learning_starts: 10000
+    local_tf_session_args:
+        inter_op_parallelism_threads: 8
+        intra_op_parallelism_threads: 8
+    log_level: WARN
+    log_sys_usage: true
+    logger_config: null
+
+    # The learning rate of the agent. In the case of DDPG, this parameter is not
+    # used. See `actor_lr` and `critic_lr` instead.
+    lr: 0.0001
+    
+    metrics_episode_collection_timeout_s: 180
+    metrics_num_episodes_for_smoothing: 100
+    metrics_smoothing_episodes: -1
+    min_iter_time_s: -1
+    min_sample_timesteps_per_reporting: null
+    min_time_s_per_reporting: 1
+    min_train_timesteps_per_reporting: null
+    model:
+        _disable_action_flattening: false
+        _disable_preprocessor_api: false
+        _time_major: false
+        _use_default_native_models: false
+        attention_dim: 64
+        attention_head_dim: 32
+        attention_init_gru_gate_bias: 2.0
+        attention_memory_inference: 50
+        attention_memory_training: 50
+        attention_num_heads: 1
+        attention_num_transformer_units: 1
+        attention_position_wise_mlp_dim: 32
+        attention_use_n_prev_actions: 0
+        attention_use_n_prev_rewards: 0
+        conv_activation: relu
+        conv_filters: null
+        custom_action_dist: null
+        custom_model: null
+        custom_model_config: {}
+        custom_preprocessor: null
+        dim: 84
+        fcnet_activation: tanh
+        fcnet_hiddens:
+        - 256
+        - 256
+        framestack: true
+        free_log_std: false
+        grayscale: false
+        lstm_cell_size: 256
+        lstm_use_prev_action: false
+        lstm_use_prev_action_reward: -1
+        lstm_use_prev_reward: false
+        max_seq_len: 20
+        no_final_linear: false
+        post_fcnet_activation: relu
+        post_fcnet_hiddens: []
+        use_attention: false
+        use_lstm: false
+        vf_share_layers: true
+        zero_mean: true
+    monitor: -1
+    multiagent:
+        count_steps_by: env_steps
+        observation_fn: null
+        policies: {}
+        policies_to_train: null
+        policy_map_cache: null
+        policy_map_capacity: 100
+        policy_mapping_fn: null
+        replay_mode: independent
+    n_step: 1
+    no_done_at_end: false
+    normalize_actions: true
+    num_cpus_for_driver: 1
+    num_cpus_per_worker: 1
+    num_envs_per_worker: 1
+    num_gpus: 0
+    num_gpus_per_worker: 0
+    num_workers: 0
+    observation_filter: NoFilter
+    observation_space: null
+    optimizer: {}
+    output: null
+    output_compress_columns:
+    - obs
+    - new_obs
+    output_config: {}
+    output_max_file_size: 67108864
+    placement_strategy: PACK
+    policy_delay: 2
+    postprocess_inputs: false
+    preprocessor_pref: deepmind
+    prioritized_replay: false
+    prioritized_replay_alpha: 0.6
+    prioritized_replay_beta: 0.4
+    prioritized_replay_eps: 1.0e-06
+    record_env: false
+    recreate_failed_workers: false
+    remote_env_batch_wait_ms: 0
+    remote_worker_envs: false
+    render_env: false
+    rollout_fragment_length: 1
+    sample_async: false
+    seed: null
+    shuffle_buffer_size: 0
+    simple_optimizer: -1
+    smooth_target_policy: true
+    soft_horizon: false
+    synchronize_filters: true
+    target_noise: 0.2
+    target_noise_clip: 0.5
+    tf_session_args:
+        allow_soft_placement: true
+        device_count:
+            CPU: 1
+        gpu_options:
+            allow_growth: true
+        inter_op_parallelism_threads: 2
+        intra_op_parallelism_threads: 2
+        log_device_placement: false
+    timesteps_per_iteration: 1000
+    training_intensity: null
+
+    # Shall twin Q-networks be used? Please do not change this setting and opt
+    # for the DDPG agent instead if you don't want it.
+    twin_q: true
+
+    use_state_preprocessor: false
+    worker_side_prioritization: false
