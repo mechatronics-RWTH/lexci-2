@@ -37,9 +37,14 @@ import copy
 import uuid
 import os
 import re
+import shutil
+import logging
 from abc import ABCMeta, abstractmethod
 import numpy as np
 from typing import Any, Callable, Optional
+
+
+logger = logging.getLogger(__name__)
 
 
 def lexci_logger_creator(
@@ -237,18 +242,18 @@ class Agent(metaclass=ABCMeta):
         Arguments:
             - model_folder_name: str
                   Path to the folder where the h5-files shall be stored.
-
-        Raises:
-            - ValueError:
-                  - If the folder `model_folder_name` already exists.
+                  Caution: If the folder already exists, it and all of its
+                  contents will be deleted!
         """
 
         # Create the folder
         model_folder_name = os.path.abspath(model_folder_name)
         if os.path.exists(model_folder_name):
-            raise ValueError(
-                f"The folder '{model_folder_name}' already exists."
+            logger.warn(
+                f"The folder '{model_folder_name}' already exists. It will be"
+                + " deleted first before recreating it."
             )
+            shutil.rmtree(model_folder_name)
         os.makedirs(model_folder_name)
 
         # Export the individual models of the agent

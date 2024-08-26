@@ -1,14 +1,14 @@
-"""A universal LExCI 2 Master that uses a PPO agent and is configurable via a
+"""A universal LExCI 2 Master that uses a TD3 agent and is configurable via a
 JSON file.
 
-File:   lexci2/universal_masters/universal_ppo_master/universal_ppo_master.py
+File:   lexci2/universal_masters/universal_td3_master/universal_td3_master.py
 Author: Kevin Badalian (badalian_k@mmp.rwth-aachen.de)
         Teaching and Research Area Mechatronics in Mobile Propulsion (MMP)
         RWTH Aachen University
-Date:   2022-08-12
+Date:   2024-08-08
 
 
-Copyright 2023 Teaching and Research Area Mechatronics in Mobile Propulsion,
+Copyright 2024 Teaching and Research Area Mechatronics in Mobile Propulsion,
                RWTH Aachen University
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
@@ -24,7 +24,7 @@ specific language governing permissions and limitations under the License.
 import lexci2
 from lexci2.ray_controller import start_ray, stop_ray
 from lexci2.lexci_env import LexciEnvConfig
-from lexci2.agents.ppo_agent import PpoAgent
+from lexci2.agents.td3_agent import Td3Agent
 from lexci2.master.master import Master
 
 import sys
@@ -49,12 +49,10 @@ def main() -> None:
 
     # Command line arguments
     arg_parser = argparse.ArgumentParser(
-        description=("Universal PPO LExCI 2" " Master.")
+        description="Universal TD3 LExCI 2 Master."
     )
     arg_parser.add_argument(
-        "config_yaml_file",
-        type=str,
-        help=("YAML-formatted" " configuration file."),
+        "config_yaml_file", type=str, help="YAML-formatted configuration file."
     )
     cli_args = arg_parser.parse_args(sys.argv[1:])
 
@@ -65,7 +63,6 @@ def main() -> None:
     # LExCI environment configuration
     obs_size = config["master_config"]["obs_size"]
     action_size = config["master_config"]["action_size"]
-    action_type = config["master_config"]["action_type"]
     obs_lb = -1 * np.ones(obs_size, dtype=np.float32)
     obs_ub = +1 * np.ones(obs_size, dtype=np.float32)
     action_lb = -1 * np.ones(action_size, dtype=np.float32)
@@ -77,7 +74,7 @@ def main() -> None:
     env_config = LexciEnvConfig(
         obs_size,
         action_size,
-        action_type,
+        "continuous",
         obs_lb,
         obs_ub,
         action_lb,
@@ -88,10 +85,10 @@ def main() -> None:
         norm_action_ub,
     )
 
-    # PPO agent and its configuration
-    ppo_config = PpoAgent.get_default_trainer_config()
-    ppo_config.update(config["ppo_config"])
-    agent = PpoAgent("agent0", env_config, ppo_config)
+    # TD3 agent and its configuration
+    td3_config = Td3Agent.get_default_trainer_config()
+    td3_config.update(config["td3_config"])
+    agent = Td3Agent("agent0", env_config, td3_config)
 
     # Create the Master
     start_ray()
@@ -99,7 +96,9 @@ def main() -> None:
         agent,
         addr=config["master_config"]["addr"],
         port=config["master_config"]["port"],
-        num_experiences_per_cycle=config["ppo_config"]["train_batch_size"],
+        num_experiences_per_cycle=config["master_config"][
+            "num_experiences_per_cycle"
+        ],
         mailbox_buffer_size=config["master_config"]["mailbox_buffer_size"],
         min_num_minions=config["master_config"]["min_num_minions"],
         max_num_minions=config["master_config"]["max_num_minions"],
@@ -111,6 +110,17 @@ def main() -> None:
         b_save_training_data=config["master_config"]["b_save_training_data"],
         b_save_sample_batches=config["master_config"]["b_save_sample_batches"],
         validation_interval=config["master_config"]["validation_interval"],
+        num_replay_trainings=config["master_config"]["num_replay_trainings"],
+        perc_replay_trainings=config["master_config"]["perc_replay_trainings"],
+        num_exp_before_replay_training=config["master_config"][
+            "num_exp_before_replay_training"
+        ],
+        offline_data_import_folder=config["master_config"][
+            "offline_data_import_folder"
+        ],
+        b_offline_training_only=(
+            config["master_config"]["b_offline_training_only"]
+        ),
     )
     if config["master_config"]["checkpoint_file"] != "":
         master.restore_checkpoint(config["master_config"]["checkpoint_file"])

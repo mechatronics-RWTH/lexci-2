@@ -48,9 +48,10 @@ In order to create and activate LExCI's environment, do the following:
     04. Run these commands as an administrator:
         
         ```
-        ./configure
+        ./configure --enable-shared
         make -j$(nproc --all)
         make altinstall
+        ldconfig
         ```
 
         Note that `make` is executed with the target `altinstall`. This ensures
@@ -137,9 +138,12 @@ the whole virtual environment, run `conda env remove --name lexci2`.
 
     Alternatively, you can download the repository as a zip file from GitHub's
     web interface. Make sure to choose the right tag first, though.
-
 05. Type `pip install .` to start the setup procedure. It takes a couple of
     minutes to complete.
+06. If you intend to automate MATLAB/Simulink, type
+    `pip install matlabengine==VERSION` where `VERSION` is the latest package
+    version for your MATLAB installation. All available versions are listed
+    [here](https://pypi.org/project/matlabengine/#history).
 
 To uninstall LExCI, open a terminal, activate its virtual environment, and type
 `pip uninstall lexci-2`.
@@ -180,9 +184,7 @@ the framework is possible which, nevertheless, is helpful when writing Minions.
 
     Alternatively, you can download the repository as a zip file from GitHub's
     web interface. Make sure to choose the right tag first, though.
-
 05. Type `pip install .` to start the setup procedure.
-
 06. If you intend to automate MATLAB/Simulink, type
     `pip install matlabengine==VERSION` where `VERSION` is the latest package
     version for your MATLAB installation. All available versions are listed
