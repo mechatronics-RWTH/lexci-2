@@ -1,9 +1,12 @@
 # Configuration of the Universal Master and its agent
 master_config:
-    # Size of the observation space
+    # Size of the observation space. Each entry in the normalized observation
+    # space of the Universal Master must be min-max normalized to the range
+    # [-1, +1].
     obs_size: 10
 
-    # Size of the action space
+    # Size of the action space. Each entry in the normalized action space of the
+    # Universal Master is in the range [-inf, +inf].
     action_size: 1
 
     # IP address of the Universal Master. If this is set to `0.0.0.0`, it'll
