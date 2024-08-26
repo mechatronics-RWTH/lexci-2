@@ -33,8 +33,11 @@ master_config:
     
     # Parameters that are passed to the Minion with every command, i.e. at the
     # beginning of every training and validation cycle
-    minion_params: {}
-    
+    minion_params:
+        # Shall the environment be rendered during simulation? This only takes
+        # effect if the Minion offers the required functionality.
+        render: false
+
     # The format of the agent's model(s) (i.e. its neural network(s)). DO NOT
     # CHANGE THIS!
     nn_format: tflite

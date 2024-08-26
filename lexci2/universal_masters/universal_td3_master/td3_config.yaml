@@ -43,6 +43,10 @@ master_config:
         # where `cycle_no` is the number of the current LExCI cycle.
         STDEV_DECAY_FACTOR: 0.925
 
+        # Shall the environment be rendered during simulation? This only takes
+        # effect if the Minion offers the required functionality.
+        render: false
+
     # The format of the agent's model(s) (i.e. its neural network(s)). DO NOT
     # CHANGE THIS!
     nn_format: tflite
