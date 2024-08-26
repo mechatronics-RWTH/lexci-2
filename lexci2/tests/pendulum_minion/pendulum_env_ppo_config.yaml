@@ -1,0 +1,311 @@
+# Configuration of the Universal Master and its agent
+master_config:
+    # Size of the observation space. Each entry in the normalized observation
+    # space of the Universal Master must be min-max normalized to the range
+    # [-1, +1].
+    obs_size: 3
+
+    # Size of the action space. Each entry in the normalized action space of the
+    # Universal Master is in the range [-inf, +inf].
+    action_size: 1
+
+    # The type of the action space. This must be either `continuous` or
+    # `discrete`.
+    action_type: continuous
+
+    # IP address of the Universal Master. If this is set to `0.0.0.0`, it'll
+    # listen on all network devices.
+    addr: 0.0.0.0
+
+    # Port on which the Universal Master shall listen for incoming connections
+    port: 5555
+
+    # The size of the mailbox's buffer [B]
+    mailbox_buffer_size: 1073741824
+
+    # The minimum number of LExCI Minions required for training
+    min_num_minions: 1
+
+    # The maximum number of LExCI Minions that shall be accepted by the
+    # Universal Master
+    max_num_minions: 2
+
+    # The time each Minion has to complete its job [s]. If a Minion takes
+    # longer, its connection is terminated by the Master.
+    minion_job_timeout: 3600.0
+
+    # Parameters that are passed to the Minion with every command, i.e. at the
+    # beginning of every training and validation cycle
+    minion_params:
+        # Shall the environment be rendered during simulation? This only takes
+        # effect if the Minion offers the required functionality.
+        render: false
+
+    # The format of the agent's model(s) (i.e. its neural network(s)). DO NOT
+    # CHANGE THIS!
+    nn_format: tflite
+
+    # Maximum size of the policy model (i.e. the policy's neural network) that
+    # is exchanged between the Master and the Minion(s) [B]. The data is always
+    # padded to this value with zeros.
+    nn_size: 65536
+
+    # The folder where all of the training output shall be saved
+    output_dir: ~/lexci_results
+
+    # Shall training episodes be saved as CSV files containing the observations,
+    # actions, rewards, etc.?
+    b_save_training_data: false
+
+    # Shall the experience batches be stored on the disk? Set this to `true` if
+    # you want to use data from this training as off-policy data in another
+    # session.
+    b_save_sample_batches: false
+
+    # Number of cycles between validation runs. During a validation, stochastic
+    # sampling is deactivated in order to assess the agent's performance.
+    validation_interval: 5
+
+    # Path to the checkpoint file to restore. If set to an empty string, i.e. to
+    # `''`, no checkpoint will be loaded.
+    checkpoint_file: ''
+
+    # Path to the folder containing all of the agent's models which shall be
+    # loaded. The models not only include the policy, but also value functions
+    # etc. They are stored per cycle as separate h5-files. If this parameter is
+    # an empty string (i.e. `''`), nothing will be loaded.
+    model_h5_folder: ''
+
+    # If the documentation string isn't empty, the Universal Master will create
+    # a text file called `Documentation.txt` in the training's output directory
+    # and write the content of the string into it.
+    doc: ''
+
+
+# Configuration of the RL algorithm
+ppo_config:
+    # Clip parameter in PPO's surrogate objective
+    clip_param: 0.3
+
+    # The entropy coefficient in PPO's loss function. This parameter is ignored
+    # if `entropy_coeff_schedule` is not `null`.
+    entropy_coeff: 0.0
+
+    # The entropy coefficient schedule to use. It's defined as a list of points
+    # where the x-axis represents the number of total experiences and the y-axis
+    # stands for the coefficient. Depending on the current number of
+    # experiences, the algorithm will interpolate linearly between the points.
+    # Set this to `null` to deactivate it.
+    entropy_coeff_schedule:
+
+    # Discount factor when calculating the return
+    gamma: 0.95
+
+    # Coefficient of the Kullback-Leibler divergence loss in PPO's loss function
+    kl_coeff: 0.2
+
+    # Desired value for the Kullback-Leibler divergence
+    kl_target: 0.01
+
+    # The value of lambda when using Generalized Advantage Estimation (GAE)
+    lambda: 0.1
+
+    # The constant learning rate. This parameter is ignored if `lr_schedule` is
+    # not `null`.
+    lr: 0.0003
+
+    # The learning rate (LR) schedule to use. It's defined as a list of points
+    # where the x-axis represents the number of total experiences and the y-axis
+    # stands for the LR. Depending on the current number of experiences, the
+    # algorithm will interpolate linearly between the points. Set this to `null`
+    # to deactivate it.
+    lr_schedule:
+    model:
+        _disable_action_flattening: false
+        _disable_preprocessor_api: false
+        _time_major: false
+        _use_default_native_models: false
+        attention_dim: 64
+        attention_head_dim: 32
+        attention_init_gru_gate_bias: 2.0
+        attention_memory_inference: 50
+        attention_memory_training: 50
+        attention_num_heads: 1
+        attention_num_transformer_units: 1
+        attention_position_wise_mlp_dim: 32
+        attention_use_n_prev_actions: 0
+        attention_use_n_prev_rewards: 0
+        conv_activation: relu
+        conv_filters:
+        custom_action_dist:
+        custom_model:
+        custom_model_config: {}
+        custom_preprocessor:
+        dim: 84
+
+        # The activation function used in the hidden layers of the of the actor
+        # and the critic. This must be either `tanh` or `relu`.
+        fcnet_activation: tanh
+
+        # Hidden layers and their sizes for both the actor and the critic, i.e.
+        # each entity has its own model with this many layers and nodes
+        fcnet_hiddens:
+            - 64
+            - 64
+        framestack: true
+        free_log_std: false
+        grayscale: false
+        lstm_cell_size: 256
+        lstm_use_prev_action: false
+        lstm_use_prev_action_reward: -1
+        lstm_use_prev_reward: false
+        max_seq_len: 20
+        no_final_linear: false
+        post_fcnet_activation: relu
+        post_fcnet_hiddens: []
+        use_attention: false
+        use_lstm: false
+        vf_share_layers: false
+        zero_mean: true
+
+    # Number of stochastic gradient descent steps (i.e. training steps) per
+    # LExCI cycle
+    num_sgd_iter: 6
+
+    # The size of a mini-batch when performing a single stochastic gradient
+    # descent step (i.e. a training step)
+    sgd_minibatch_size: 64
+
+    # The train batch size must be set to the number of experiences per LExCI
+    # training cycle. This value MUST be greater or equal to:
+    #     sgd_minibatch_size * num_sgd_iter
+    train_batch_size: 512
+
+    # Shall Generalized Advantage Estimation (GAE) be used?
+    use_gae: true
+
+    # Clip parameter for the value function approximator. This should be
+    # adjusted to the scale of the returns.
+    vf_clip_param: 10000
+
+    # The coefficient of the value function loss in PPO's loss function
+    vf_loss_coeff: 1.0
+
+    #==========================================================================#
+    # Please consult Ray/RLlib's manual for the parameters beyond this point.  #
+    # Note that some of them have no effect depending on the chosen RL         #
+    # algorithm and that others might be internally overwritten by LExCI.      #
+    #==========================================================================#
+    _disable_action_flattening: false
+    _disable_execution_plan_api: true
+    _disable_preprocessor_api: false
+    _fake_gpus: false
+    _tf_policy_handles_more_than_one_loss: false
+    action_space:
+    actions_in_input_normalized: false
+    always_attach_evaluation_results: false
+    batch_mode: truncate_episodes
+    clip_actions: false
+    clip_rewards:
+    collect_metrics_timeout: -1
+    compress_observations: false
+    create_env_on_driver: false
+    custom_eval_function:
+    custom_resources_per_worker: {}
+    disable_env_checking: false
+    eager_max_retraces: 20
+    eager_tracing: false
+    env:
+    env_config: {}
+    env_task_fn:
+    evaluation_config: {}
+    evaluation_duration: 10
+    evaluation_duration_unit: episodes
+    evaluation_interval:
+    evaluation_num_episodes: -1
+    evaluation_num_workers: 0
+    evaluation_parallel_to_training: false
+    exploration_config:
+        type: StochasticSampling
+    explore: true
+    extra_python_environs_for_driver: {}
+    extra_python_environs_for_worker: {}
+    fake_sampler: false
+    framework: tf
+    grad_clip:
+    horizon:
+    ignore_worker_failures: false
+    in_evaluation: false
+    input: sampler
+    input_config: {}
+    input_evaluation:
+        - is
+        - wis
+    keep_per_episode_custom_metrics: false
+    local_tf_session_args:
+        inter_op_parallelism_threads: 8
+        intra_op_parallelism_threads: 8
+    log_level: WARN
+    log_sys_usage: true
+    logger_config:
+    metrics_episode_collection_timeout_s: 180
+    metrics_num_episodes_for_smoothing: 100
+    metrics_smoothing_episodes: -1
+    min_iter_time_s: -1
+    min_sample_timesteps_per_reporting:
+    min_time_s_per_reporting:
+    min_train_timesteps_per_reporting:
+    monitor: -1
+    multiagent:
+        count_steps_by: env_steps
+        observation_fn:
+        policies: {}
+        policies_to_train:
+        policy_map_cache:
+        policy_map_capacity: 100
+        policy_mapping_fn:
+        replay_mode: independent
+    no_done_at_end: false
+    normalize_actions: true
+    num_cpus_for_driver: 1
+    num_cpus_per_worker: 1
+    num_envs_per_worker: 1
+    num_gpus: 0
+    num_gpus_per_worker: 0
+    num_workers: 2
+    observation_filter: NoFilter
+    observation_space:
+    optimizer: {}
+    output:
+    output_compress_columns:
+        - obs
+        - new_obs
+    output_config: {}
+    output_max_file_size: 67108864
+    placement_strategy: PACK
+    postprocess_inputs: false
+    preprocessor_pref: deepmind
+    record_env: false
+    recreate_failed_workers: false
+    remote_env_batch_wait_ms: 0
+    remote_worker_envs: false
+    render_env: false
+    rollout_fragment_length: 200
+    sample_async: false
+    seed:
+    shuffle_buffer_size: 0
+    shuffle_sequences: true
+    simple_optimizer: -1
+    soft_horizon: false
+    synchronize_filters: true
+    tf_session_args:
+        allow_soft_placement: true
+        device_count:
+            CPU: 1
+        gpu_options:
+            allow_growth: true
+        inter_op_parallelism_threads: 2
+        intra_op_parallelism_threads: 2
+        log_device_placement: false
+    timesteps_per_iteration: 0
+    use_critic: true

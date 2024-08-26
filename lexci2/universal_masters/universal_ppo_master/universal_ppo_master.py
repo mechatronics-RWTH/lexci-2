@@ -30,7 +30,7 @@ from lexci2.master.master import Master
 import sys
 import os
 import argparse
-import json
+import yaml
 import logging
 import numpy as np
 
@@ -52,15 +52,15 @@ def main() -> None:
         description=("Universal PPO LExCI 2" " Master.")
     )
     arg_parser.add_argument(
-        "config_json_file",
+        "config_yaml_file",
         type=str,
-        help=("JSON-formatted" " configuration file."),
+        help=("YAML-formatted" " configuration file."),
     )
     cli_args = arg_parser.parse_args(sys.argv[1:])
 
     # Load the config JSON
-    with open(cli_args.config_json_file, "r") as f:
-        config = json.load(f)
+    with open(cli_args.config_yaml_file, "r") as f:
+        config = yaml.safe_load(f)
 
     # LExCI environment configuration
     obs_size = config["master_config"]["obs_size"]
@@ -118,10 +118,10 @@ def main() -> None:
         master.import_models_h5(config["master_config"]["model_h5_folder"])
 
     # Create a copy of the config file in the log directory
-    with open(cli_args.config_json_file, "r") as f:
+    with open(cli_args.config_yaml_file, "r") as f:
         s_config = f.read()
     copied_config_file_name = os.path.join(
-        master.get_output_dir(), os.path.basename(cli_args.config_json_file)
+        master.get_output_dir(), os.path.basename(cli_args.config_yaml_file)
     )
     with open(copied_config_file_name, "w") as f:
         f.write(s_config)
