@@ -38,9 +38,10 @@ logging.basicConfig(
 logger = logging.getLogger()
 
 
-class TestInstallation(unittest.TestCase):
+class TestTraining(unittest.TestCase):
     """Train agents in the pendulum environment using various RL algorithms and
-    check whether they converge to an optimum."""
+    check whether they converge to an optimum.
+    """
 
     @classmethod
     def setUpClass(cls) -> None:
