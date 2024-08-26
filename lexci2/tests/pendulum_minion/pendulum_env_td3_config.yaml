@@ -145,7 +145,7 @@ td3_config:
     huber_threshold: 1.0
 
     # Weights for the L2 regularization
-    l2_reg: 1e-06
+    l2_reg: 1.0e-06
 
     # Configuration of the replay buffer
     replay_buffer_config:
@@ -328,7 +328,7 @@ td3_config:
     prioritized_replay: false
     prioritized_replay_alpha: 0.6
     prioritized_replay_beta: 0.4
-    prioritized_replay_eps: 1e-06
+    prioritized_replay_eps: 1.0e-06
     record_env: false
     recreate_failed_workers: false
     remote_env_batch_wait_ms: 0
