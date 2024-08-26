@@ -120,9 +120,9 @@ ddpg_config:
 
     # Hidden actor layers and their sizes
     actor_hiddens:
-    - 64
-    - 64
-    
+        - 64
+        - 64
+
     # Learning rate of the actor
     actor_lr: 0.001
 
@@ -132,8 +132,8 @@ ddpg_config:
 
     # Hidden critic layers and their sizes
     critic_hiddens:
-    - 64
-    - 64
+        - 64
+        - 64
 
     # Learning rate of the critic
     critic_lr: 0.001
@@ -183,29 +183,29 @@ ddpg_config:
     _disable_preprocessor_api: false
     _fake_gpus: false
     _tf_policy_handles_more_than_one_loss: false
-    action_space: null
-    actions_in_input_normalized: false        
+    action_space:
+    actions_in_input_normalized: false
     always_attach_evaluation_results: false
     batch_mode: truncate_episodes
     buffer_size: -1
     clip_actions: false
-    clip_rewards: null
+    clip_rewards:
     collect_metrics_timeout: -1
     compress_observations: false
     create_env_on_driver: false
-    custom_eval_function: null
+    custom_eval_function:
     custom_resources_per_worker: {}
     disable_env_checking: false
     eager_max_retraces: 20
     eager_tracing: false
-    env: null
+    env:
     env_config: {}
-    env_task_fn: null
+    env_task_fn:
     evaluation_config:
         explore: false
     evaluation_duration: 10
     evaluation_duration_unit: episodes
-    evaluation_interval: null
+    evaluation_interval:
     evaluation_num_episodes: -1
     evaluation_num_workers: 0
     evaluation_parallel_to_training: false
@@ -225,16 +225,16 @@ ddpg_config:
     extra_python_environs_for_driver: {}
     extra_python_environs_for_worker: {}
     fake_sampler: false
-    framework: tf 
-    grad_clip: null
-    horizon: null
+    framework: tf
+    grad_clip:
+    horizon:
     ignore_worker_failures: false
     in_evaluation: false
     input: sampler
     input_config: {}
     input_evaluation:
-    - is
-    - wis
+        - is
+        - wis
     keep_per_episode_custom_metrics: false
     learning_starts: 1500
     local_tf_session_args:
@@ -242,7 +242,7 @@ ddpg_config:
         intra_op_parallelism_threads: 8
     log_level: WARN
     log_sys_usage: true
-    logger_config: null
+    logger_config:
 
     # The learning rate of the agent. In the case of DDPG, this parameter is not
     # used. See `actor_lr` and `critic_lr` instead.
@@ -252,9 +252,9 @@ ddpg_config:
     metrics_num_episodes_for_smoothing: 100
     metrics_smoothing_episodes: -1
     min_iter_time_s: -1
-    min_sample_timesteps_per_reporting: null
+    min_sample_timesteps_per_reporting:
     min_time_s_per_reporting: 1
-    min_train_timesteps_per_reporting: null
+    min_train_timesteps_per_reporting:
     model:
         _disable_action_flattening: false
         _disable_preprocessor_api: false
@@ -271,16 +271,16 @@ ddpg_config:
         attention_use_n_prev_actions: 0
         attention_use_n_prev_rewards: 0
         conv_activation: relu
-        conv_filters: null
-        custom_action_dist: null
-        custom_model: null
+        conv_filters:
+        custom_action_dist:
+        custom_model:
         custom_model_config: {}
-        custom_preprocessor: null
+        custom_preprocessor:
         dim: 84
         fcnet_activation: tanh
         fcnet_hiddens:
-        - 256
-        - 256
+            - 256
+            - 256
         framestack: true
         free_log_std: false
         grayscale: false
@@ -299,12 +299,12 @@ ddpg_config:
     monitor: -1
     multiagent:
         count_steps_by: env_steps
-        observation_fn: null
+        observation_fn:
         policies: {}
-        policies_to_train: null
-        policy_map_cache: null
+        policies_to_train:
+        policy_map_cache:
         policy_map_capacity: 100
-        policy_mapping_fn: null
+        policy_mapping_fn:
         replay_mode: independent
     n_step: 1
     no_done_at_end: false
@@ -316,12 +316,12 @@ ddpg_config:
     num_gpus_per_worker: 0
     num_workers: 0
     observation_filter: NoFilter
-    observation_space: null
+    observation_space:
     optimizer: {}
-    output: null
+    output:
     output_compress_columns:
-    - obs
-    - new_obs
+        - obs
+        - new_obs
     output_config: {}
     output_max_file_size: 67108864
     placement_strategy: PACK
@@ -336,17 +336,17 @@ ddpg_config:
     recreate_failed_workers: false
     remote_env_batch_wait_ms: 0
     remote_worker_envs: false
-    render_env: false 
+    render_env: false
     rollout_fragment_length: 1
     sample_async: false
-    seed: null
+    seed:
     shuffle_buffer_size: 0
     simple_optimizer: -1
     smooth_target_policy: false
-    soft_horizon: false 
+    soft_horizon: false
     synchronize_filters: true
     target_noise: 0.2
-    target_noise_clip: 0.5 
+    target_noise_clip: 0.5
     tf_session_args:
         allow_soft_placement: true
         device_count:
@@ -356,8 +356,8 @@ ddpg_config:
         inter_op_parallelism_threads: 2
         intra_op_parallelism_threads: 2
         log_device_placement: false
-    timesteps_per_iteration: 1000 
-    training_intensity: null
+    timesteps_per_iteration: 1000
+    training_intensity:
 
     # Shall twin Q-networks be used? Please do not change this setting and opt
     # for the TD3 agent instead.

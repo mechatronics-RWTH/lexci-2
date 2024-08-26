@@ -5,7 +5,7 @@ master_config:
 
     # Size of the action space
     action_size: 1
-    
+
     # The type of the action space. This must be either `continuous` or
     # `discrete`.
     action_type: continuous
@@ -13,16 +13,16 @@ master_config:
     # IP address of the Universal Master. If this is set to `0.0.0.0`, it'll
     # listen on all network devices.
     addr: 0.0.0.0
-    
+
     # Port on which the Universal Master shall listen for incoming connections
     port: 5555
- 
+
     # The size of the mailbox's buffer [B]
     mailbox_buffer_size: 1073741824
-    
+
     # The minimum number of LExCI Minions required for training
     min_num_minions: 1
-    
+
     # The maximum number of LExCI Minions that shall be accepted by the
     # Universal Master
     max_num_minions: 2
@@ -30,7 +30,7 @@ master_config:
     # The time each Minion has to complete its job [s]. If a Minion takes
     # longer, its connection is terminated by the Master.
     minion_job_timeout: 3600.0
-    
+
     # Parameters that are passed to the Minion with every command, i.e. at the
     # beginning of every training and validation cycle
     minion_params:
@@ -41,38 +41,38 @@ master_config:
     # The format of the agent's model(s) (i.e. its neural network(s)). DO NOT
     # CHANGE THIS!
     nn_format: tflite
- 
+
     # Maximum size of the policy model (i.e. the policy's neural network) that
     # is exchanged between the Master and the Minion(s) [B]. The data is always
     # padded to this value with zeros.
     nn_size: 65536
-    
+
     # The folder where all of the training output shall be saved
     output_dir: ~/lexci_results
-    
+
     # Shall training episodes be saved as CSV files containing the observations,
     # actions, rewards, etc.?
     b_save_training_data: false
-    
+
     # Shall the experience batches be stored on the disk? Set this to `true` if
     # you want to use data from this training as off-policy data in another
     # session.
     b_save_sample_batches: false
-    
+
     # Number of cycles between validation runs. During a validation, stochastic
     # sampling is deactivated in order to assess the agent's performance.
     validation_interval: 10
-    
+
     # Path to the checkpoint file to restore. If set to an empty string, i.e. to
     # `''`, no checkpoint will be loaded.
     checkpoint_file: ''
-    
+
     # Path to the folder containing all of the agent's models which shall be
     # loaded. The models not only include the policy, but also value functions
     # etc. They are stored per cycle as separate h5-files. If this parameter is
     # an empty string (i.e. `''`), nothing will be loaded.
     model_h5_folder: ''
-    
+
     # If the documentation string isn't empty, the Universal Master will create
     # a text file called `Documentation.txt` in the training's output directory
     # and write the content of the string into it.
@@ -93,11 +93,11 @@ ppo_config:
     # stands for the coefficient. Depending on the current number of
     # experiences, the algorithm will interpolate linearly between the points.
     # Set this to `null` to deactivate it.
-    entropy_coeff_schedule: null
+    entropy_coeff_schedule:
 
     # Discount factor when calculating the return
     gamma: 0.999
-   
+
     # Coefficient of the Kullback-Leibler divergence loss in PPO's loss function
     kl_coeff: 0.2
 
@@ -117,10 +117,12 @@ ppo_config:
     # algorithm will interpolate linearly between the points. Set this to `null`
     # to deactivate it.
     lr_schedule:
-    -   - 0
-        - 0.0025
-    -   - 1000000000.0
-        - 1.0e-05
+        -
+            - 0
+            - 0.0025
+        -
+            - 1000000000.0
+            - 1.0e-05
 
     # Configuration of the agent's model
     model:
@@ -139,11 +141,11 @@ ppo_config:
         attention_use_n_prev_actions: 0
         attention_use_n_prev_rewards: 0
         conv_activation: relu
-        conv_filters: null
-        custom_action_dist: null
-        custom_model: null
+        conv_filters:
+        custom_action_dist:
+        custom_model:
         custom_model_config: {}
-        custom_preprocessor: null
+        custom_preprocessor:
         dim: 84
 
         # The activation function used in the hidden layers of the of the actor
@@ -153,9 +155,9 @@ ppo_config:
         # Hidden layers and their sizes for both the actor and the critic, i.e.
         # each entity has its own model with this many layers and nodes
         fcnet_hiddens:
-        - 16
-        - 16
-        - 16
+            - 16
+            - 16
+            - 16
 
         framestack: true
         free_log_std: false
@@ -188,7 +190,7 @@ ppo_config:
 
     # Shall Generalized Advantage Estimation (GAE) be used?
     use_gae: true
- 
+
     # Clip parameter for the value function approximator. This should be
     # adjusted to the scale of the returns.
     vf_clip_param: 1000000.0
@@ -206,27 +208,27 @@ ppo_config:
     _disable_preprocessor_api: false
     _fake_gpus: false
     _tf_policy_handles_more_than_one_loss: false
-    action_space: null
+    action_space:
     actions_in_input_normalized: false
     always_attach_evaluation_results: false
     batch_mode: truncate_episodes
     clip_actions: false
-    clip_rewards: null
+    clip_rewards:
     collect_metrics_timeout: -1
     compress_observations: false
     create_env_on_driver: false
-    custom_eval_function: null
+    custom_eval_function:
     custom_resources_per_worker: {}
     disable_env_checking: false
     eager_max_retraces: 20
     eager_tracing: false
-    env: null
+    env:
     env_config: {}
-    env_task_fn: null
+    env_task_fn:
     evaluation_config: {}
     evaluation_duration: 10
     evaluation_duration_unit: episodes
-    evaluation_interval: null
+    evaluation_interval:
     evaluation_num_episodes: -1
     evaluation_num_workers: 0
     evaluation_parallel_to_training: false
@@ -237,38 +239,38 @@ ppo_config:
     extra_python_environs_for_worker: {}
     fake_sampler: false
     framework: tf
-    grad_clip: null
-    horizon: null
+    grad_clip:
+    horizon:
     ignore_worker_failures: false
     in_evaluation: false
     input: sampler
     input_config: {}
     input_evaluation:
-    - is
-    - wis
+        - is
+        - wis
     keep_per_episode_custom_metrics: false
     local_tf_session_args:
         inter_op_parallelism_threads: 8
         intra_op_parallelism_threads: 8
     log_level: WARN
     log_sys_usage: true
-    logger_config: null
+    logger_config:
     metrics_episode_collection_timeout_s: 180
     metrics_num_episodes_for_smoothing: 100
     metrics_smoothing_episodes: -1
     min_iter_time_s: -1
-    min_sample_timesteps_per_reporting: null
-    min_time_s_per_reporting: null
-    min_train_timesteps_per_reporting: null
+    min_sample_timesteps_per_reporting:
+    min_time_s_per_reporting:
+    min_train_timesteps_per_reporting:
     monitor: -1
     multiagent:
         count_steps_by: env_steps
-        observation_fn: null
+        observation_fn:
         policies: {}
-        policies_to_train: null
-        policy_map_cache: null
+        policies_to_train:
+        policy_map_cache:
         policy_map_capacity: 100
-        policy_mapping_fn: null
+        policy_mapping_fn:
         replay_mode: independent
     no_done_at_end: false
     normalize_actions: true
@@ -279,12 +281,12 @@ ppo_config:
     num_gpus_per_worker: 0
     num_workers: 2
     observation_filter: NoFilter
-    observation_space: null
+    observation_space:
     optimizer: {}
-    output: null
+    output:
     output_compress_columns:
-    - obs
-    - new_obs
+        - obs
+        - new_obs
     output_config: {}
     output_max_file_size: 67108864
     placement_strategy: PACK
@@ -297,7 +299,7 @@ ppo_config:
     render_env: false
     rollout_fragment_length: 200
     sample_async: false
-    seed: null
+    seed:
     shuffle_buffer_size: 0
     shuffle_sequences: true
     simple_optimizer: -1
@@ -313,4 +315,4 @@ ppo_config:
         intra_op_parallelism_threads: 2
         log_device_placement: false
     timesteps_per_iteration: 0
-    use_critic: true 
+    use_critic: true
