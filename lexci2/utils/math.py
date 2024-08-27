@@ -20,8 +20,13 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
 
-
+import copy
 import numpy as np
+import logging
+
+
+# Create the logger
+logger = logging.getLogger(__name__)
 
 
 def softmax(x: np.ndarray) -> np.ndarray:
@@ -60,3 +65,42 @@ def inv_softmax(x: np.ndarray) -> np.ndarray:
     """
 
     return np.log(x)
+
+
+def moving_average(x: np.ndarray, kernel_size: int) -> np.ndarray:
+    """Apply a moving average filter to an input array.
+
+    Arguments:
+        - x: np.ndarray
+              The input data which will not be modified.
+        - kernel_size: int
+              The size of the moving average kernel. If it is even, the number
+              will be rounded up to the next odd value.
+
+    Returns:
+        - _: np.ndarray
+              A new array containing the smoothed data.
+    """
+
+    # Check and adjust the kernel size if necessary
+    if kernel_size % 2 != 1:
+        logger.info(
+            f"Using a kernel size of {kernel_size + 1} instead {kernel_size}"
+            + " which was passed to the function."
+        )
+        kernel_size += 1
+
+    # Perform the smoothing
+    x_smooth = np.zeros(x.shape, dtype=x.dtype)
+    kernel_offset_limit = int(kernel_size / 2)
+    for i in range(len(x)):
+        for j in range(-kernel_offset_limit, kernel_offset_limit + 1, 1):
+            if i + j < 0:
+                x_smooth[i] += x[0]
+            elif i + j >= len(x):
+                x_smooth[i] += x[-1]
+            else:
+                x_smooth[i] += x[i + j]
+        x_smooth[i] /= kernel_size
+
+    return x_smooth
