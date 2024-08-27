@@ -104,3 +104,36 @@ def moving_average(x: np.ndarray, kernel_size: int) -> np.ndarray:
         x_smooth[i] /= kernel_size
 
     return x_smooth
+
+
+def calc_rmse(x_1: np.ndarray, x_2: np.ndarray) -> float:
+    """Calculate the root mean squared error (RMSE) of two datasets.
+
+    Arguments:
+        - x_1: np.ndarray
+              The first dataset which is considered the reference.
+        - x_2: np.ndarray
+              The second dataset.
+
+    Returns:
+        - _: float
+              The datasets' RMSE. A small value indicates a close resemblance
+              between the two.
+
+    Raises:
+        - ValueError:
+              - If the two datasets aren't of equal size.
+    """
+
+    # Check the datasets
+    if len(x_1) != len(x_2):
+        raise ValueError("The datasets aren't of equal size.")
+
+    # Compute the RMSE
+    rmse = 0.0
+    for i in range(len(x_1)):
+        rmse += (x_2[i] - x_1[i]) ** 2
+    rmse /= len(x_1)
+    rmse = np.sqrt(rmse)
+
+    return rmse
