@@ -20,18 +20,17 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
 
-
 import os
 
 from typing import Union
 
 
 def find_newest_folder(root_dir: str) -> Union[str, None]:
-    """Find the newest directory in a root folder.
+    """Find the newest directory in a root folder non-recursively.
 
     Arguments:
         - root_dir: str
-              Root directory to start the search from.
+              The directory to search in.
 
     Returns:
         - _: Union[str, None]
@@ -39,15 +38,31 @@ def find_newest_folder(root_dir: str) -> Union[str, None]:
               doesn't contain any folders.
     """
 
-    dirs = [
-        os.path.join(root_dir, e)
-        for e in os.listdir(root_dir)
-        if os.path.isdir(os.path.join(root_dir, e))
-    ]
+    dirs = [e for e in os.listdir(root_dir) if os.path.isdir(e)]
     if len(dirs) == 0:
         return None
-    dirs = sorted(dirs, key=lambda x: os.path.getctime(x), reverse=True)
-    return dirs[0]
+    else:
+        return os.path.abspath(max(dirs, key=os.path.getmtime))
+
+
+def find_newest_file(root_dir: str) -> Union[str, None]:
+    """Find the newest file in a root folder non-recursively.
+
+    Arguments:
+        - root_dir: str
+              The directory to search in.
+
+    Returns:
+        - _: Union[str, None]
+              Absolute path to the newest file or `None` if `root_dir` doesn't
+              contain any.
+    """
+
+    files = [e for e in os.listdir(root_dir) if os.path.isfile(e)]
+    if len(files) == 0:
+        return None
+    else:
+        return os.path.abspath(max(files, key=os.path.getmtime))
 
 
 def find_file_in_folder(root_dir: str, file_name: str) -> Union[str, None]:
