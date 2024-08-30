@@ -20,22 +20,23 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
 
+import sys
+import os
+
+sys.path.append(
+    os.path.abspath(os.path.join(os.path.dirname(__file__), "../../lexci2"))
+)  # TODO: Ensure that this has no side-effects on subprocesses.
+
+# TODO: Write a setup.py build-target for testing.
+
 from test_installation import install_lexci
-from lexci2.utils.file_system import (
-    find_newest_folder,
-    find_newest_file,
-    list_files,
-)  # TODO: Fix the import
-from lexci2.utils.lsv_log_reader import CsvLogReader  # TODO: Fix the import
-from lexci2.utils.math import (
-    apply_moving_average,
-    calc_rmse,
-)  # TODO: Fix the import
+from utils.file_system import find_newest_folder, find_newest_file, list_files
+from utils.csv_log_reader import CsvLogReader
+from utils.math import apply_moving_average, calc_rmse
 
 import unittest
 import subprocess
 import tempfile
-import os
 import time
 import datetime
 import csv
@@ -75,7 +76,7 @@ class TestTraining(unittest.TestCase):
 
         # Command for activating the virtual environment
         venv_activation_script_name = os.path.abspath(
-            os.path.join(cls._tmp_dir.name), ".venv/lexci2/bin/activate"
+            os.path.join(cls._tmp_dir.name, ".venv/lexci2/bin/activate")
         )
         cls._venv_activation_cmd = f"source {venv_activation_script_name}"
 
@@ -103,7 +104,7 @@ class TestTraining(unittest.TestCase):
         # Create a copy of the configuration file in the temporary directory
         src_config_file_name = os.path.abspath(
             os.path.join(
-                TestTraining._top_level_dir,
+                TestTraining._top_level_dir_name,
                 "lexci2/test_envs/pendulum_minion/pendulum_env_ppo_config.yaml",
             )
         )
@@ -120,10 +121,10 @@ class TestTraining(unittest.TestCase):
             os.path.join(TestTraining._tmp_dir.name, "lexci_results")
         )
         with open(config_file_name, "r") as f:
-            config = yaml.load(f)
+            config = yaml.safe_load(f)
         config["master_config"]["output_dir"] = results_dir_name
         with open(config_file_name, "w") as f:
-            yaml.dump(f)
+            f.write(yaml.dump(config))
 
         # Get the value of the training timeout
         PPO_TRAINING_TIMEOUT = os.environ.get(
@@ -138,8 +139,10 @@ class TestTraining(unittest.TestCase):
         # Start the Universal Master
         logger.info("Starting the Universal PPO Master...")
         config_file_name = os.path.abspath(
-            TestTraining._top_level_dir_name,
-            "lexci2/test_envs/pendulum_minion/pendulum_env_ppo_config.yaml",
+            os.path.join(
+                TestTraining._top_level_dir_name,
+                "lexci2/test_envs/pendulum_minion/pendulum_env_ppo_config.yaml",
+            )
         )
         cmd = f'exec /bin/bash -c "{TestTraining._venv_activation_cmd}'
         cmd += f' && Lexci2UniversalPpoMaster {config_file_name}"'
@@ -200,7 +203,7 @@ class TestTraining(unittest.TestCase):
         ## Load and smoothen the reference data
         ref_file_name = os.path.abspath(
             os.path.join(
-                TestTraining._top_level_dir,
+                TestTraining._top_level_dir_name,
                 "tests/data/pendulum_environment_ppo_reference_log.csv",
             )
         )
