@@ -37,6 +37,7 @@ import datetime
 import csv
 import shutil
 import yaml
+import numpy as np
 import logging
 
 
@@ -230,16 +231,18 @@ class TestTraining(unittest.TestCase):
             )
         )
         ref_file_reader = CsvLogReader(ref_file_name)
-        ref_training_rewards = ref_file_reader.get_episode_reward_mean_list()[
-            :NUM_TRAINING_CYCLES
-        ]
+        ref_training_rewards = ref_file_reader.get_episode_reward_mean_list()
+        ref_training_rewards = np.array(
+            ref_training_rewards[:NUM_TRAINING_CYCLES], dtype=np.float32
+        )
         ref_training_rewards = apply_moving_average(
             ref_training_rewards, MOVING_AVERAGE_KERNEL_SIZE
         )
         ## Retrieve and smoothen the training data
-        training_rewards = log_file_reader.get_episode_reward_mean_list()[
-            :NUM_TRAINING_CYCLES
-        ]
+        training_rewards = log_file_reader.get_episode_reward_mean_list()
+        training_rewards = np.array(
+            training_rewards[:NUM_TRAINING_CYCLES], dtype=np.float32
+        )
         training_rewards = apply_moving_average(
             training_rewards, MOVING_AVERAGE_KERNEL_SIZE
         )
