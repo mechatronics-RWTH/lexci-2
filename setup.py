@@ -203,7 +203,7 @@ def main() -> None:
         author="Kevin Badalian",
         author_email="badalian_k@mmp.rwth-aachen.de",
         url="https://github.com/mechatronics-RWTH/lexci-2",
-        packages=find_packages(),
+        packages=find_packages(exclude=["tests*"]),
         package_data=package_data,
         include_package_data=True,
         python_requires=">=3.9.15",
