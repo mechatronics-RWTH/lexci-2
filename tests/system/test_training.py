@@ -219,8 +219,12 @@ class TestTraining(unittest.TestCase):
             )
             if master_proc is not None:
                 master_proc.kill()
+                master_proc.wait()
+                master_proc = None
             if minion_proc is not None:
                 minion_proc.kill()
+                minion_proc.wait()
+                minion_proc = None
             logger.info("... done.")
 
         # Analyze the training progress
