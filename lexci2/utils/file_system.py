@@ -38,7 +38,11 @@ def find_newest_folder(root_dir: str) -> Union[str, None]:
               doesn't contain any folders.
     """
 
-    dirs = [e for e in os.listdir(root_dir) if os.path.isdir(e)]
+    dirs = [
+        os.path.join(root_dir, e)
+        for e in os.listdir(root_dir)
+        if os.path.isdir(os.path.join(root_dir, e))
+    ]
     if len(dirs) == 0:
         return None
     else:
@@ -58,7 +62,11 @@ def find_newest_file(root_dir: str) -> Union[str, None]:
               contain any.
     """
 
-    files = [e for e in os.listdir(root_dir) if os.path.isfile(e)]
+    files = [
+        os.path.join(root_dir, e)
+        for e in os.listdir(root_dir)
+        if os.path.isfile(os.path.join(root_dir, e))
+    ]
     if len(files) == 0:
         return None
     else:
@@ -78,7 +86,9 @@ def list_files(root_dir: str) -> list[str]:
     """
 
     return [
-        os.path.abspath(e) for e in os.listdir(root_dir) if os.path.isfile(e)
+        os.path.abspath(os.path.join(root_dir, e))
+        for e in os.listdir(root_dir)
+        if os.path.isfile(os.path.join(root_dir, e))
     ]
 
 

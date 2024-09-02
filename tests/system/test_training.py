@@ -133,13 +133,6 @@ class TestTraining(unittest.TestCase):
         try:
             # Start the Universal Master
             logger.info("Starting the Universal PPO Master...")
-            config_file_name = os.path.abspath(
-                os.path.join(
-                    TestTraining._top_level_dir_name,
-                    "lexci2/test_envs/pendulum_minion/",
-                    "pendulum_env_ppo_config.yaml",
-                )
-            )
             cmd = f'exec /bin/bash -c "{TestTraining._venv_activation_cmd}'
             cmd += f' && Lexci2UniversalPpoMaster {config_file_name}"'
             master_proc = subprocess.Popen(
