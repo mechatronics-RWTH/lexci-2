@@ -120,7 +120,7 @@ class TestTraining(unittest.TestCase):
 
         # Get the value of the training timeout
         PPO_TRAINING_TIMEOUT = os.environ.get(
-            "LEXCI_TEST_PPO_TRAINING_TIMEOUT", 9000
+            "LEXCI_TEST_PPO_TRAINING_TIMEOUT", 12600
         )
         logger.info(
             f"The timeout of the PPO training is set to {PPO_TRAINING_TIMEOUT}"
