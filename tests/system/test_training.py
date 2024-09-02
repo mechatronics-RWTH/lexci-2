@@ -127,81 +127,101 @@ class TestTraining(unittest.TestCase):
             + " variable `LEXCI_TEST_PPO_TRAINING_TIMEOUT`."
         )
 
-        # Start the Universal Master
-        logger.info("Starting the Universal PPO Master...")
-        config_file_name = os.path.abspath(
-            os.path.join(
-                TestTraining._top_level_dir_name,
-                "lexci2/test_envs/pendulum_minion/pendulum_env_ppo_config.yaml",
+        # Create the background processes
+        master_proc = None
+        minion_proc = None
+        try:
+            # Start the Universal Master
+            logger.info("Starting the Universal PPO Master...")
+            config_file_name = os.path.abspath(
+                os.path.join(
+                    TestTraining._top_level_dir_name,
+                    "lexci2/test_envs/pendulum_minion/",
+                    "pendulum_env_ppo_config.yaml",
+                )
             )
-        )
-        cmd = f'exec /bin/bash -c "{TestTraining._venv_activation_cmd}'
-        cmd += f' && Lexci2UniversalPpoMaster {config_file_name}"'
-        master_proc = subprocess.Popen(
-            cmd,
-            shell=True,
-            stdin=subprocess.DEVNULL,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-        )
-        # Wait for the server to come online
-        time.sleep(15)
-        logger.info("... done.")
-
-        # Start the Pendulum Minion
-        logger.info("Starting the Pendulum Minion...")
-        pendulum_minion_name = os.path.abspath(
-            os.path.join(
-                TestTraining._top_level_dir_name,
-                "lexci2/test_envs/pendulum_minion/pendulum_minion.py",
+            cmd = f'exec /bin/bash -c "{TestTraining._venv_activation_cmd}'
+            cmd += f' && Lexci2UniversalPpoMaster {config_file_name}"'
+            master_proc = subprocess.Popen(
+                cmd,
+                shell=True,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
             )
-        )
-        cmd = f'exec /bin/bash -c "{TestTraining._venv_activation_cmd}'
-        cmd += f' && python3.9 {pendulum_minion_name} ppo"'
-        minion_proc = subprocess.Popen(
-            cmd,
-            shell=True,
-            stdin=subprocess.DEVNULL,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-        )
-        # Wait for the Minion to connect to the Master
-        time.sleep(15)
-        logger.info("... done.")
+            # Wait for the server to come online
+            time.sleep(15)
+            logger.info("... done.")
 
-        # Names of the log file and the validation folder
-        training_dir_name = find_newest_folder(results_dir_name)
-        if training_dir_name is None:
-            self.fail("Could not find the training output folder.")
-        log_file_name = os.path.abspath(
-            os.path.join(training_dir_name, "log.csv")
-        )
-        log_file_reader = CsvLogReader(log_file_name)
-        validation_folder_name = os.path.abspath(
-            os.path.join(training_dir_name, "Validation_Data")
-        )
+            # Start the Pendulum Minion
+            logger.info("Starting the Pendulum Minion...")
+            pendulum_minion_name = os.path.abspath(
+                os.path.join(
+                    TestTraining._top_level_dir_name,
+                    "lexci2/test_envs/pendulum_minion/pendulum_minion.py",
+                )
+            )
+            cmd = f'exec /bin/bash -c "{TestTraining._venv_activation_cmd}'
+            cmd += f' && python3.9 {pendulum_minion_name} ppo"'
+            minion_proc = subprocess.Popen(
+                cmd,
+                shell=True,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            # Wait for the Minion to connect to the Master
+            time.sleep(15)
+            logger.info("... done.")
 
-        # Wait until the required number of cycles has been completed
-        logger.info(
-            f"Waiting for the agent to complete {NUM_TRAINING_CYCLES} training"
-            + " cycles..."
-        )
-        t_start = datetime.datetime.now()
-        while True:
-            # Wait for new data to be generated
-            time.sleep(60)
+            # Names of the log file and the validation folder
+            training_dir_name = find_newest_folder(results_dir_name)
+            if training_dir_name is None:
+                self.fail("Could not find the training output folder.")
+            log_file_name = os.path.abspath(
+                os.path.join(training_dir_name, "log.csv")
+            )
+            log_file_reader = CsvLogReader(log_file_name)
+            validation_folder_name = os.path.abspath(
+                os.path.join(training_dir_name, "Validation_Data")
+            )
 
-            # Check if the required number of cycles has been completed
-            current_cycle_no = log_file_reader.get_num_cycles()
-            logger.info(f"... {current_cycle_no} runs already finished...")
-            if current_cycle_no >= NUM_TRAINING_CYCLES:
-                break
+            # Wait until the required number of cycles has been completed
+            logger.info(
+                f"Waiting for the agent to complete {NUM_TRAINING_CYCLES}"
+                + " training cycles..."
+            )
+            t_start = datetime.datetime.now()
+            while True:
+                # Wait for new data to be generated
+                time.sleep(60)
 
-            # Check whether the job has timed out
-            t_now = datetime.datetime.now()
-            if (t_now - t_start).total_seconds() >= PPO_TRAINING_TIMEOUT:
-                self.fail("The PPO training has time out.")
-        logger.info("... done.")
+                # Check if the required number of cycles has been completed
+                current_cycle_no = log_file_reader.get_num_cycles()
+                logger.info(f"... {current_cycle_no} runs already finished...")
+                if current_cycle_no >= NUM_TRAINING_CYCLES:
+                    break
+
+                # Check whether the job has timed out
+                t_now = datetime.datetime.now()
+                if (t_now - t_start).total_seconds() >= PPO_TRAINING_TIMEOUT:
+                    self.fail("The PPO training has time out.")
+            logger.info("... done.")
+        except Exception as e:
+            self.fail(
+                f"The following exception was caught during training: {e}"
+            )
+        finally:
+            # Stop the Master and the Minion processes
+            logger.info(
+                "Killing the background processes of the Master and the"
+                + " Minion..."
+            )
+            if master_proc is not None:
+                master_proc.kill()
+            if minion_proc is not None:
+                minion_proc.kill()
+            logger.info("... done.")
 
         # Analyze the training progress
         logger.info("Analyzing the training progress...")
@@ -261,14 +281,6 @@ class TestTraining(unittest.TestCase):
                 + " performed well between validations. However, it's very"
                 + " unlikely that this happens in a successful training."
             )
-        logger.info("... done.")
-
-        # Stop the Master and the Minion processes
-        logger.info(
-            "Killing the background processes of the Master and the Minion..."
-        )
-        master_proc.kill()
-        minion_proc.kill()
         logger.info("... done.")
 
     def test_ddpg(self) -> None:
