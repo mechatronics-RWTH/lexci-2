@@ -20,20 +20,15 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
 
-import sys
+from lexci2.utils.file_system import (
+    find_newest_folder,
+    find_newest_file,
+    list_files,
+)
+from lexci2.utils.csv_log_reader import CsvLogReader
+from lexci2.utils.math import apply_moving_average, calc_rmse
+
 import os
-
-sys.path.append(
-    os.path.abspath(os.path.join(os.path.dirname(__file__), "../../lexci2"))
-)  # TODO: Ensure that this has no side-effects on subprocesses.
-
-# TODO: Write a setup.py build-target for testing.
-
-from test_installation import install_lexci
-from utils.file_system import find_newest_folder, find_newest_file, list_files
-from utils.csv_log_reader import CsvLogReader
-from utils.math import apply_moving_average, calc_rmse
-
 import unittest
 import subprocess
 import tempfile
@@ -61,33 +56,29 @@ class TestTraining(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        """Create a temporary installation of the framework."""
+        """Create a temporary folder for configuration files and results."""
 
         # The top-level directory of the repository
         cls._top_level_dir_name = os.path.abspath(
             os.path.join(os.path.dirname(__file__), "..", "..")
         )
 
-        # Install LExCI in a temporary folder
-        logger.info("Performing a temporary installation of LExCI...")
+        # Create a temporary folder
+        logger.info("Creating a temporary directory for the tests...")
         cls._tmp_dir = tempfile.TemporaryDirectory()
-        install_lexci(cls._top_level_dir_name, cls._tmp_dir.name)
         logger.info("... done.")
 
         # Command for activating the virtual environment
-        venv_activation_script_name = os.path.abspath(
-            os.path.join(cls._tmp_dir.name, ".venv/lexci2/bin/activate")
+        cls._venv_activation_cmd = os.environ.get(
+            "LEXCI_VENV_ACTIVATION_CMD", "true"
         )
-        cls._venv_activation_cmd = f"source {venv_activation_script_name}"
-
-        # TODO: Import the temporary LExCI installation into the system path?
 
     @classmethod
     def tearDownClass(cls) -> None:
-        """Remove the temporary installation of LExCI."""
+        """Remove the temporary folder."""
 
         if cls._tmp_dir is not None:
-            logger.info("Removing the temporary installation of LExCI...")
+            logger.info("Removing the temporary directory...")
             cls._tmp_dir.cleanup()
             cls._tmp_dir = None
             logger.info("... done.")
@@ -146,7 +137,13 @@ class TestTraining(unittest.TestCase):
         )
         cmd = f'exec /bin/bash -c "{TestTraining._venv_activation_cmd}'
         cmd += f' && Lexci2UniversalPpoMaster {config_file_name}"'
-        master_proc = subprocess.Popen(cmd, shell=True)
+        master_proc = subprocess.Popen(
+            cmd,
+            shell=True,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
         # Wait for the server to come online
         time.sleep(15)
         logger.info("... done.")
@@ -154,12 +151,20 @@ class TestTraining(unittest.TestCase):
         # Start the Pendulum Minion
         logger.info("Starting the Pendulum Minion...")
         pendulum_minion_name = os.path.abspath(
-            os.path.join(TestTraining._top_level_dir_name),
-            "lexci2/test_envs/pendulum_minion/pendulum_minion.py",
+            os.path.join(
+                TestTraining._top_level_dir_name,
+                "lexci2/test_envs/pendulum_minion/pendulum_minion.py",
+            )
         )
         cmd = f'exec /bin/bash -c "{TestTraining._venv_activation_cmd}'
         cmd += f' && python3.9 {pendulum_minion_name} ppo"'
-        minion_proc = subprocess.Popen(cmd, shell=True)
+        minion_proc = subprocess.Popen(
+            cmd,
+            shell=True,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
         # Wait for the Minion to connect to the Master
         time.sleep(15)
         logger.info("... done.")

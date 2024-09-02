@@ -65,6 +65,23 @@ def find_newest_file(root_dir: str) -> Union[str, None]:
         return os.path.abspath(max(files, key=os.path.getmtime))
 
 
+def list_files(root_dir: str) -> list[str]:
+    """Find all files in a folder non-recursively.
+
+    Arguments:
+        - root_dir: str
+              The directory to search in.
+
+    Returns:
+        - _: list[str]
+              List with the absolute paths of the found files.
+    """
+
+    return [
+        os.path.abspath(e) for e in os.listdir(root_dir) if os.path.isfile(e)
+    ]
+
+
 def find_file_in_folder(root_dir: str, file_name: str) -> Union[str, None]:
     """Find a file in a folder or its sub-directories. Please note that this
     function stops once there's a hit. Hence, if there are multiple occurrences
