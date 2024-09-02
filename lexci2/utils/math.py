@@ -67,7 +67,7 @@ def inv_softmax(x: np.ndarray) -> np.ndarray:
     return np.log(x)
 
 
-def moving_average(x: np.ndarray, kernel_size: int) -> np.ndarray:
+def apply_moving_average(x: np.ndarray, kernel_size: int) -> np.ndarray:
     """Apply a moving average filter to an input array.
 
     Arguments:
