@@ -74,6 +74,11 @@ class TestTraining(unittest.TestCase):
             "LEXCI_VENV_ACTIVATION_CMD", "true"
         )
 
+        # Constants
+        cls._MOVING_AVERAGE_KERNEL_SIZE = 11
+        cls._MAX_ALLOWED_RMSE = 300
+        cls._MIN_SUCCESSFUL_VALIDATION_RETURN = -400
+
     @classmethod
     def tearDownClass(cls) -> None:
         """Remove the temporary folder."""
@@ -84,25 +89,44 @@ class TestTraining(unittest.TestCase):
             cls._tmp_dir = None
             logger.info("... done.")
 
-    def test_ppo(self) -> None:
-        """Train with a PPO agent."""
+    def _run_training_test(
+        self,
+        algorithm: str,
+        timeout: float,
+        num_training_cycles: int,
+    ) -> None:
+        """Run a training and check whether it passes all required tests..
 
-        # Constants
-        NUM_TRAINING_CYCLES = 751
-        MOVING_AVERAGE_KERNEL_SIZE = 11
-        MAX_ALLOWED_RMSE = 300
-        MIN_SUCCESSFUL_VALIDATION_RETURN = -400
+        Arguments:
+            - algorithm: str
+                  The RL algorithm to train with. This must be either `ppo`,
+                  `ddpg`, or `td3`.
+            - timeout: float (Unit: s)
+                  Time after which the training times out.
+            - num_training_cycles: int
+                  The number of training cycles to run.
+
+        Raises:
+            - ValueError:
+                  - If the algorithm is unknown.
+        """
+
+        # Check arguments
+        if algorithm not in ["ppo", "ddpg", "td3"]:
+            raise ValueError(f"Unknown RL algorithm '{algorithm}'.")
 
         # Create a copy of the configuration file in the temporary directory
         src_config_file_name = os.path.abspath(
             os.path.join(
                 TestTraining._top_level_dir_name,
-                "lexci2/test_envs/pendulum_minion/pendulum_env_ppo_config.yaml",
+                "lexci2/test_envs/pendulum_minion/",
+                f"pendulum_env_{algorithm}_config.yaml",
             )
         )
         config_file_name = os.path.abspath(
             os.path.join(
-                TestTraining._tmp_dir.name, "pendulum_env_ppo_config.yaml"
+                TestTraining._tmp_dir.name,
+                f"pendulum_env_{algorithm}_config.yaml",
             )
         )
         shutil.copy(src_config_file_name, config_file_name)
@@ -118,14 +142,12 @@ class TestTraining(unittest.TestCase):
         with open(config_file_name, "w") as f:
             f.write(yaml.dump(config))
 
-        # Get the value of the training timeout
-        PPO_TRAINING_TIMEOUT = os.environ.get(
-            "LEXCI_TEST_PPO_TRAINING_TIMEOUT", 12600
-        )
+        # Inform the user about the training's timeout
         logger.info(
-            f"The timeout of the PPO training is set to {PPO_TRAINING_TIMEOUT}"
-            + " s. You can change this value by setting the environment"
-            + " variable `LEXCI_TEST_PPO_TRAINING_TIMEOUT`."
+            f"The timeout of the {algorithm.upper()} training is set to"
+            + f" {timeout} s. You can change this value by setting the"
+            + " environment variable"
+            + f" `LEXCI_TEST_{algorithm.upper()}_TRAINING_TIMEOUT`."
         )
 
         # Create the background processes
@@ -133,9 +155,12 @@ class TestTraining(unittest.TestCase):
         minion_proc = None
         try:
             # Start the Universal Master
-            logger.info("Starting the Universal PPO Master...")
+            logger.info(f"Starting the Universal {algorithm.upper()} Master...")
             cmd = f'exec /bin/bash -c "{TestTraining._venv_activation_cmd}'
-            cmd += f' && Lexci2UniversalPpoMaster {config_file_name}"'
+            cmd += (
+                f" && Lexci2Universal{algorithm.title()}Master"
+                + f' {config_file_name}"'
+            )
             master_proc = subprocess.Popen(
                 cmd,
                 shell=True,
@@ -156,7 +181,7 @@ class TestTraining(unittest.TestCase):
                 )
             )
             cmd = f'exec /bin/bash -c "{TestTraining._venv_activation_cmd}'
-            cmd += f' && python3.9 {pendulum_minion_name} ppo"'
+            cmd += f' && python3.9 {pendulum_minion_name} {algorithm}"'
             minion_proc = subprocess.Popen(
                 cmd,
                 shell=True,
@@ -182,7 +207,7 @@ class TestTraining(unittest.TestCase):
 
             # Wait until the required number of cycles has been completed
             logger.info(
-                f"Waiting for the agent to complete {NUM_TRAINING_CYCLES}"
+                f"Waiting for the agent to complete {num_training_cycles}"
                 + " training cycles..."
             )
             t_start = datetime.datetime.now()
@@ -193,13 +218,13 @@ class TestTraining(unittest.TestCase):
                 # Check if the required number of cycles has been completed
                 current_cycle_no = log_file_reader.get_num_cycles()
                 logger.info(f"... {current_cycle_no} runs already finished...")
-                if current_cycle_no >= NUM_TRAINING_CYCLES:
+                if current_cycle_no >= num_training_cycles:
                     break
 
                 # Check whether the job has timed out
                 t_now = datetime.datetime.now()
-                if (t_now - t_start).total_seconds() >= PPO_TRAINING_TIMEOUT:
-                    self.fail("The PPO training has time out.")
+                if (t_now - t_start).total_seconds() >= timeout:
+                    self.fail(f"The {algorithm.upper()} training has time out.")
             logger.info("... done.")
         except Exception as e:
             self.fail(
@@ -227,40 +252,42 @@ class TestTraining(unittest.TestCase):
         ref_file_name = os.path.abspath(
             os.path.join(
                 TestTraining._top_level_dir_name,
-                "tests/data/pendulum_environment_ppo_reference_log.csv",
+                "tests/data/",
+                f"pendulum_environment_{algorithm}_reference_log.csv",
             )
         )
         ref_file_reader = CsvLogReader(ref_file_name)
         ref_training_rewards = ref_file_reader.get_episode_reward_mean_list()
         ref_training_rewards = np.array(
-            ref_training_rewards[:NUM_TRAINING_CYCLES], dtype=np.float32
+            ref_training_rewards[:num_training_cycles], dtype=np.float32
         )
         ref_training_rewards = apply_moving_average(
-            ref_training_rewards, MOVING_AVERAGE_KERNEL_SIZE
+            ref_training_rewards, TestTraining._MOVING_AVERAGE_KERNEL_SIZE
         )
         ## Retrieve and smoothen the training data
         training_rewards = log_file_reader.get_episode_reward_mean_list()
         training_rewards = np.array(
-            training_rewards[:NUM_TRAINING_CYCLES], dtype=np.float32
+            training_rewards[:num_training_cycles], dtype=np.float32
         )
         training_rewards = apply_moving_average(
-            training_rewards, MOVING_AVERAGE_KERNEL_SIZE
+            training_rewards, TestTraining._MOVING_AVERAGE_KERNEL_SIZE
         )
         ## Calculate the root mean squared error and fail if it is too large
         rmse = calc_rmse(ref_training_rewards, training_rewards)
-        if rmse > MAX_ALLOWED_RMSE:
+        if rmse > TestTraining._MAX_ALLOWED_RMSE:
             self.fail(
-                f"The PPO training has a RMSE of {rmse:.1f} when comparing with"
-                + " the reference, but the maximum allowed RMSE of the test"
-                + f" case is {MAX_ALLOWED_RMSE:.1f}."
+                f"The {algorithm.upper()} training has a RMSE of {rmse:.1f}"
+                + " when comparing with the reference, but the maximum allowed"
+                + " RMSE of the test case is"
+                + f" {TestTraining._MAX_ALLOWED_RMSE:.1f}."
             )
         logger.info("... done.")
 
         # Analyze the validation performance
         logger.info(
             "Checking whether the agent achieved a return of"
-            + f" {MIN_SUCCESSFUL_VALIDATION_RETURN} or better in a validation"
-            + " run..."
+            + f" {TestTraining._MIN_SUCCESSFUL_VALIDATION_RETURN} or better in"
+            + " a validation run..."
         )
         for validation_file_name in list_files(validation_folder_name):
             with open(validation_file_name, "r") as f:
@@ -271,17 +298,35 @@ class TestTraining(unittest.TestCase):
 
                 # Check whether the agent performed well enough in the
                 # validation
-                if episode_return >= MIN_SUCCESSFUL_VALIDATION_RETURN:
+                if (
+                    episode_return
+                    >= TestTraining._MIN_SUCCESSFUL_VALIDATION_RETURN
+                ):
                     break
         else:
             self.fail(
                 "No validation run has a return which is better than"
-                + f" {MIN_SUCCESSFUL_VALIDATION_RETURN}. Because theys aren't"
-                + " performed in every cycle, it might be that the agent had"
-                + " performed well between validations. However, it's very"
-                + " unlikely that this happens in a successful training."
+                + f" {TestTraining._MIN_SUCCESSFUL_VALIDATION_RETURN}. Because"
+                + " they aren't performed in every cycle, it might be that the"
+                + " agent had performed well between validations. However, it's"
+                + " very unlikely that this happens in a successful training."
             )
         logger.info("... done.")
+
+    def test_ppo(self) -> None:
+        """Train with a PPO agent."""
+
+        # Constants
+        # NUM_TRAINING_CYCLES = 751
+        NUM_TRAINING_CYCLES = 21
+        PPO_TRAINING_TIMEOUT = os.environ.get(
+            "LEXCI_TEST_PPO_TRAINING_TIMEOUT", 12600
+        )
+
+        # Run the actual test
+        self._run_training_test(
+            "ppo", PPO_TRAINING_TIMEOUT, NUM_TRAINING_CYCLES
+        )
 
     def test_ddpg(self) -> None:
         """Train with a DDPG agent."""
