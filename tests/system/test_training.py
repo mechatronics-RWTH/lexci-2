@@ -318,26 +318,36 @@ class TestTraining(unittest.TestCase):
 
         # Constants
         NUM_TRAINING_CYCLES = 751
-        PPO_TRAINING_TIMEOUT = os.environ.get(
+        TRAINING_TIMEOUT = os.environ.get(
             "LEXCI_TEST_PPO_TRAINING_TIMEOUT", 12600
         )
 
         # Run the actual test
-        self._run_training_test(
-            "ppo", PPO_TRAINING_TIMEOUT, NUM_TRAINING_CYCLES
-        )
+        self._run_training_test("ppo", TRAINING_TIMEOUT, NUM_TRAINING_CYCLES)
 
     def test_ddpg(self) -> None:
         """Train with a DDPG agent."""
 
-        # TODO
-        pass
+        # Constants
+        NUM_TRAINING_CYCLES = 51
+        TRAINING_TIMEOUT = os.environ.get(
+            "LEXCI_TEST_DDPG_TRAINING_TIMEOUT", 5400
+        )
+
+        # Run the actual test
+        self._run_training_test("ddpg", TRAINING_TIMEOUT, NUM_TRAINING_CYCLES)
 
     def test_td3(self) -> None:
         """Train with a TD3 agent."""
 
-        # TODO
-        pass
+        # Constants
+        NUM_TRAINING_CYCLES = 51
+        TRAINING_TIMEOUT = os.environ.get(
+            "LEXCI_TEST_TD3_TRAINING_TIMEOUT", 5400
+        )
+
+        # Run the actual test
+        self._run_training_test("td3", TRAINING_TIMEOUT, NUM_TRAINING_CYCLES)
 
 
 if __name__ == "__main__":
