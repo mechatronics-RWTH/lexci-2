@@ -317,8 +317,7 @@ class TestTraining(unittest.TestCase):
         """Train with a PPO agent."""
 
         # Constants
-        # NUM_TRAINING_CYCLES = 751
-        NUM_TRAINING_CYCLES = 21
+        NUM_TRAINING_CYCLES = 751
         PPO_TRAINING_TIMEOUT = os.environ.get(
             "LEXCI_TEST_PPO_TRAINING_TIMEOUT", 12600
         )
