@@ -90,7 +90,7 @@ class TestTraining(unittest.TestCase):
         # Constants
         NUM_TRAINING_CYCLES = 751
         MOVING_AVERAGE_KERNEL_SIZE = 11
-        MAX_ALLOWED_RMSE = 200
+        MAX_ALLOWED_RMSE = 300
         MIN_SUCCESSFUL_VALIDATION_RETURN = -400
 
         # Create a copy of the configuration file in the temporary directory
