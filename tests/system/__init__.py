@@ -1,11 +1,13 @@
-"""Initializer of the `pendulum_minion` package.
+"""Initializer of the `system` package.
 
-File:   lexci2/tests/pendulum_minion/__init__.py
+File:   tests/system/__init__.py
 Author: Kevin Badalian (badalian_k@mmp.rwth-aachen.de)
-Date:   2024-05-08
+        Teaching and Research Area Mechatronics in Mobile Propulsion (MMP)
+        RWTH Aachen University
+Date:   2024-08-28
 
 
-Copyright 2023 Teaching and Research Area Mechatronics in Mobile Propulsion,
+Copyright 2024 Teaching and Research Area Mechatronics in Mobile Propulsion,
                RWTH Aachen University
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
