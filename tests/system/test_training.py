@@ -132,13 +132,14 @@ class TestTraining(unittest.TestCase):
         shutil.copy(src_config_file_name, config_file_name)
 
         # Modify the config file such that LExCI writes its output into the
-        # temporary folder
+        # temporary folder and performs a validation run in every cycle
         results_dir_name = os.path.abspath(
             os.path.join(TestTraining._tmp_dir.name, "lexci_results")
         )
         with open(config_file_name, "r") as f:
             config = yaml.safe_load(f)
         config["master_config"]["output_dir"] = results_dir_name
+        config["master_config"]["validation_interval"] = 1
         with open(config_file_name, "w") as f:
             f.write(yaml.dump(config))
 
@@ -306,10 +307,7 @@ class TestTraining(unittest.TestCase):
         else:
             self.fail(
                 "No validation run has a return which is better than"
-                + f" {TestTraining._MIN_SUCCESSFUL_VALIDATION_RETURN}. Because"
-                + " they aren't performed in every cycle, it might be that the"
-                + " agent had performed well between validations. However, it's"
-                + " very unlikely that this happens in a successful training."
+                + f" {TestTraining._MIN_SUCCESSFUL_VALIDATION_RETURN}."
             )
         logger.info("... done.")
 
@@ -319,7 +317,7 @@ class TestTraining(unittest.TestCase):
         # Constants
         NUM_TRAINING_CYCLES = 751
         TRAINING_TIMEOUT = os.environ.get(
-            "LEXCI_TEST_PPO_TRAINING_TIMEOUT", 12600
+            "LEXCI_TEST_PPO_TRAINING_TIMEOUT", 21600
         )
 
         # Run the actual test
@@ -331,7 +329,7 @@ class TestTraining(unittest.TestCase):
         # Constants
         NUM_TRAINING_CYCLES = 51
         TRAINING_TIMEOUT = os.environ.get(
-            "LEXCI_TEST_DDPG_TRAINING_TIMEOUT", 5400
+            "LEXCI_TEST_DDPG_TRAINING_TIMEOUT", 9000
         )
 
         # Run the actual test
@@ -343,7 +341,7 @@ class TestTraining(unittest.TestCase):
         # Constants
         NUM_TRAINING_CYCLES = 51
         TRAINING_TIMEOUT = os.environ.get(
-            "LEXCI_TEST_TD3_TRAINING_TIMEOUT", 5400
+            "LEXCI_TEST_TD3_TRAINING_TIMEOUT", 9000
         )
 
         # Run the actual test
