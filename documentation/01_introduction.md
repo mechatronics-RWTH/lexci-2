@@ -50,6 +50,25 @@ and RL. The framework utilises
 to model their neural networks.
 
 
-## Modus Operandi
+### Modus Operandi
+
+LExCI is made up of two Python scripts: the Universal LExCI Master as the
+coordinator and an interface to RLlib on one side and the LExCI Minion for
+interacting with the embedded system on the other.
+
+| ![Architecture of the LExCI Framework](images/LExCI_Architecture.png) |
+| :--: |
+| (C) K. Badalian, L. Koch, T. Brinkmann, M. Picerno, M. Wegener, S.-Y. Lee, and J. Andert // Source: https://link.springer.com/article/10.1007/s10489-024-05573-0 // [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/) // This figure has been modified. |
+
+The framework continuously completes so called *cycles*. At the beginning of
+one, the LExCI Master fetches the current version of the agent's policy (i.e.
+the control strategy of the agent) and converts it into the TensorFlow Lite
+Micro format. This data is bundled up with other training-related parameters and
+sent to the LExCI Minion which, in turn, overwrites the policy on the embedded
+system via some control sofware and starts running episodes until the required
+number of experiences has been generated. Those raw experiences are then
+post-processed and sent back to the Master which arranges them into training
+batches and passes them to RLlib. The library updates the agent based on the new
+data and the cycle starts anew.
 
 TODO
