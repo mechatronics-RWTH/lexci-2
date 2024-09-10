@@ -86,9 +86,14 @@ In order to create and activate LExCI's environment, do the following:
     location if you wish. In that case, don't forget to adapt the following
     commands accordingly.
 03. Create the environment proper with
-    `py -3.9 -m venv C:/Users/YOUR_USER_NAME/.venv/lexci2`.
-04. Activate the environment with `~/.venv/lexci2/Scripts/Activate.ps1`. The
-    command line prompt should start with `(lexci2)` now.
+    `py -3.9 -m venv C:/Users/YOUR_USER_NAME/.venv/lexci2` (`~` must be
+    explicitly expanded).
+04. Activate the environment with `~/.venv/lexci2/Scripts/Activate.ps1`. You may
+    have to
+    [change the execution policy of the PowerShell](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.security/set-executionpolicy?view=powershell-7.4)
+    for this (e.g. by typing `Set-ExecutionPolicy unrestricted` into a
+    PowerShell that you've opened as an administrator). The command line prompt
+    should start with `(lexci2)` when the environment is active.
 
 The virtual environment can be deactivated by typing `deactivate`. Should you
 want to remove it altogether, simply delete `~/.venv/lexci2`.
@@ -183,8 +188,8 @@ the framework is possible which, nevertheless, is helpful when writing Minions.
     of NumPy that LExCI needs.
 
     ```
-    python3.9 -m pip install pip==22.0.4
-    pip install setuptools==58.1.0 wheel==0.38.4 numpy==1.26.4
+    py -3.9 -m pip install pip==22.0.4
+    py -3.9 -m pip install setuptools==58.1.0 wheel==0.38.4 numpy==1.26.4
     ```
 
 04. Navigate to the destination of the repository on your computer and clone it:
@@ -195,23 +200,23 @@ the framework is possible which, nevertheless, is helpful when writing Minions.
     ```
 
     Then, `cd` into LExCI's folder and check out the version you want to install
-    (Here, we're going with `v2.20.0`. Do not use the `main` branch!):
+    (Here, we're going with `v2.23.0`. Do not use the `main` branch!):
 
     ```
     cd ./lexci-2
-    git checkout v2.20.0
+    git checkout v2.23.0
     ```
 
     Alternatively, you can download the repository as a zip file from GitHub's
     web interface. Make sure to choose the right tag first, though.
-05. Type `pip install .` to start the setup procedure.
+05. Type `py -3.9 -m pip install .` to start the setup procedure.
 06. If you intend to automate MATLAB/Simulink, type
-    `pip install matlabengine==VERSION` where `VERSION` is the latest package
-    version for your MATLAB installation. All available versions are listed
-    [here](https://pypi.org/project/matlabengine/#history).
+    `py -3.9 -m pip install matlabengine==VERSION` where `VERSION` is the latest
+    package version for your MATLAB installation. All available versions are
+    listed [here](https://pypi.org/project/matlabengine/#history).
 
 To uninstall LExCI, open a terminal, activate its virtual environment, and type
-`pip uninstall lexci-2`.
+`py -3.9 -m pip uninstall lexci-2`.
 
 
 ## Notes

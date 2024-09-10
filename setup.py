@@ -203,10 +203,13 @@ def main() -> None:
         author="Kevin Badalian",
         author_email="badalian_k@mmp.rwth-aachen.de",
         url="https://github.com/mechatronics-RWTH/lexci-2",
+        license="Apache-2.0",
         packages=find_packages(exclude=["tests*"]),
         package_data=package_data,
         include_package_data=True,
-        python_requires=">=3.9.15",
+        # LExCI was developed using Python 3.9.15 but the closest available
+        # Windows installer is version 3.9.13
+        python_requires=">=3.9.13",
         requires=required_packages,
         install_requires=required_packages,
         setup_requires=required_packages,
