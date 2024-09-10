@@ -71,7 +71,27 @@ explorer to make it visible.
 
 
 #### Windows
-TODO
+In order to create and activate LExCI's environment, do the following:
+01. Install Python 3.9.13 by downloading the
+    [Windows installer](https://www.python.org/downloads/release/python-3913/)
+    and executing it. Select **Install launcher for all users** and click on
+    **Install now**.
+
+    Note: LExCI was developed using Python 3.9.15 but — at the time of writing —
+    there is no Windows installer available for that version. So, unless you
+    feel like building from source, go with the above as the patch version
+    number is negligible here.
+02. Create a folder for your virtual environment(s) in your home directory by
+    typing `mkdir ~/.venv` into a PowerShell. You can choose a different
+    location if you wish. In that case, don't forget to adapt the following
+    commands accordingly.
+03. Create the environment proper with
+    `py -3.9 -m venv C:/Users/YOUR_USER_NAME/.venv/lexci2`.
+04. Activate the environment with `~/.venv/lexci2/Scripts/Activate.ps1`. The
+    command line prompt should start with `(lexci2)` now.
+
+The virtual environment can be deactivated by typing `deactivate`. Should you
+want to remove it altogether, simply delete `~/.venv/lexci2`.
 
 
 ### Anaconda
