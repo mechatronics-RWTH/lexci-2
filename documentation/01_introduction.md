@@ -1,14 +1,14 @@
 # Introduction
 
 In this part of the documentation, you'll get a brief summary of the motivation
-behind developing LExCI, what the framework is, and what it does.
+behind developing LExCI, what the framework does, and how it operates.
 
 ## Motivation
 
 Embedded systems/devices are specialised computers which are integrated into
 larger systems where they act as control units. They are typically characterised
-by being physically small, offering adequate performance for the intended task,
-a rugged design, and a real-time operating system. Despite their size, embedded
+by being physically small, offering adequate performance for their task, a
+rugged design, and a real-time operating system. Despite their size, embedded
 devices play a major role in keeping our modern world moving: they are the
 electronic control units (ECUs) in our vehicles, the chips that regulate traffic
 signals, or the computers inside aircraft.
@@ -41,24 +41,25 @@ is capable of.
 
 Given that RL software cannot run *on* (most) embedded systems, we thought to
 ourselves: What if one took the RL agent out of its library, somehow deployed it
-on the target system, and fed the so generated data back into the library? The
+on the target system, and fed the so generated data back to the library? The
 answer to that question is LExCI, the *Learning and Experiencing Cycle
 Interface*, which acts as a mediator between the worlds of embedded computing
 and RL. The framework utilises
 [Ray/RLlib](https://github.com/ray-project/ray) to train agents and
 [TensorFlow](https://github.com/tensorflow/tensorflow)/[TensorFlow Lite Micro](https://github.com/tensorflow/tflite-micro)
-to model their neural networks.
+to model their NNs.
 
 
 ### Modus Operandi
 
-LExCI is made up of two Python scripts: the Universal LExCI Master as the
+LExCI is made up of two main Python scripts: the Universal LExCI Master as the
 coordinator and an interface to RLlib on one side and the LExCI Minion for
-interacting with the embedded system on the other.
+interacting with the embedded system on the other (see Figure 1 below).
 
 | ![Architecture of the LExCI Framework](images/LExCI_Architecture.png) |
 | :--: |
-| (C) K. Badalian, L. Koch, T. Brinkmann, M. Picerno, M. Wegener, S.-Y. Lee, and J. Andert // Source: https://link.springer.com/article/10.1007/s10489-024-05573-0 // [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/) // This figure has been modified. |
+| Figure 1: Architecture of the LExCI framework |
+| (C) K. Badalian et al. \| Source: https://link.springer.com/article/10.1007/s10489-024-05573-0 \| [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/) \| This figure has been modified. |
 
 The framework continuously completes so called *cycles*. At the beginning of
 one, the LExCI Master fetches the current version of the agent's policy (i.e.
@@ -69,6 +70,18 @@ system via some control sofware and starts running episodes until the required
 number of experiences has been generated. Those raw experiences are then
 post-processed and sent back to the Master which arranges them into training
 batches and passes them to RLlib. The library updates the agent based on the new
-data and the cycle starts anew.
+data and the cycle starts anew. When using an off-policy RL algorithm, the
+Master continues training with experiences drawn from its replay buffer while
+the Minion is busy.
 
-TODO
+Every couple of cycles, a validation is performed. During such a cycle, actions
+aren't sampled stochastically according to the action distributions that the
+agent returns for the observations; instead, the mean of the distribution is
+chosen in every step. Hence, the behaviour becomes deterministic and lends
+itself better to evaluating the performance of the agent.
+
+LExCI's architecture is suited for parallelisation and, as a matter of fact, the
+framework supports spawning multiple Minion instances. When more than one is
+available, the workload is split between the Minions, i.e. each one only
+generates a fraction of the experiences. This features comes in especially handy
+in scenarios where data collection is the bottleneck of the process.
