@@ -143,7 +143,7 @@ the whole virtual environment, run `conda env remove --name lexci2`.
 
     ```
     python3.9 -m pip install pip==22.0.4
-    pip install setuptools==58.1.0 wheel==0.38.4 numpy==1.26.4
+    python3.9 -m pip install setuptools==58.1.0 wheel==0.38.4 numpy==1.26.4
     ```
 
 04. Navigate to the destination of the repository on your computer and clone it:
@@ -154,21 +154,21 @@ the whole virtual environment, run `conda env remove --name lexci2`.
     ```
 
     Then, `cd` into LExCI's folder and check out the version you want to install
-    (Here, we're going with `v2.20.0`. Do not use the `main` branch!):
+    (Here, we're going with `v2.23.0`. Do not use the `main` branch!):
 
     ```
     cd ./lexci-2
-    git checkout v2.20.0
+    git checkout v2.23.0
     ```
 
     Alternatively, you can download the repository as a zip file from GitHub's
     web interface. Make sure to choose the right tag first, though.
-05. Type `pip install .` to start the setup procedure. It takes a couple of
-    minutes to complete.
+05. Type `python3.9 -m pip install .` to start the setup procedure. It takes a
+    couple of minutes to complete.
 06. If you intend to automate MATLAB/Simulink, type
-    `pip install matlabengine==VERSION` where `VERSION` is the latest package
-    version for your MATLAB installation. All available versions are listed
-    [here](https://pypi.org/project/matlabengine/#history).
+    `python3.9 -m pip install matlabengine==VERSION` where `VERSION` is the
+    latest package version for your MATLAB installation. All available versions
+    are listed [here](https://pypi.org/project/matlabengine/#history).
 
 To uninstall LExCI, open a terminal, activate its virtual environment, and type
 `pip uninstall lexci-2`.
