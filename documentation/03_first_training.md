@@ -7,37 +7,44 @@ the pendulum swing-up problem is a great place to start. It's the environment
 that was tackled in the
 [LExCI paper](https://link.springer.com/article/10.1007/s10489-024-05573-0) and,
 as such, it naturally comes with pre-configured hyperparameter sets as well as
-an implementation of the Minion. All you need to do is to generate a
-configuration file, start the Master and the Minion, and wait until the agent
-converges. This document will show you how.
+an implementation of the Minion. All you need to do is to start the toolchain
+and wait for the agent to converge. This document will show you how.
 
 
-## Configuration File
+## Configuration Files
 
-LExCI is configured through [JSON](https://www.json.org/json-en.html) files that
-contain the general settings of the framework as well as the RL agent's
-hyperparameters. To aid users with their generation, the repository provides so
-called config creators, i.e. Python scripts which list the Master's options and
-expose the most important hyperparameters of the chosen RL algorithm.
+LExCI is configured through [YAML](https://yaml.org/) files that contain the
+general settings of the framework as well as the RL agent's hyperparameters.
+Among other things, the former is made up of the dimensions of the observation
+space, the action space size, networking settings (e.g. IP address and port
+number of the Master), how often validations are performed, etc. The latter
+comprises the architecture of the agent's neural network(s), the learning rate
+(schedule), and the like. When going through them, you'll see that a block
+comment separates the (in our experience) most relevant parameters from those of
+minor importance. Please consult
+[Ray/RLlib's manual](https://docs.ray.io/en/releases-1.13.0/rllib/rllib-algorithms.html)
+for the ones in the second group: some parameters may have no effect depending
+on the chosen RL algorithm, others may be overridden by related options, and
+still others might be internally overwritten by LExCI.
 
-Open a terminal, activate LExCI's virtual environment, and `cd` to your local
-copy of the repository. Next, type `cd lexci2/tests/pendulum_minion` and then
-run `python3.9 ddpg_config_creator.py ddpg_config.json`. This will create a file
-named `ddpg_config.json` in the current working directory.
+Templates for each supported RL algorithm can be found in the folders of LExCI's
+[Universal Masters](https://github.com/mechatronics-RWTH/lexci-2/tree/main/lexci2/universal_masters).
+Here, we'll use configuration files that have already been fine-tuned for the
+[pendulum environment](https://github.com/mechatronics-RWTH/lexci-2/tree/main/lexci2/test_envs/pendulum_minion).
 
 
 ## Starting the Master and the Minion
 
 Open a terminal, activate the virtual environment, and run
-`Lexci2UniversalDdpgMaster /path/to/ddpg_config.json` to start the Master. After
-a couple of seconds (and many, many log messages), you should see a line stating
-that it is listening for incoming connections.
+`Lexci2UniversalDdpgMaster /path/to/pendulum_env_ddpg_config.yaml` to start the
+Master. After a couple of seconds (and many, many log messages), you should see
+a line stating that it is listening for incoming connections.
 
 Open a second terminal, activate the virtual environment, and `cd` to
-`lexci2/tests/pendulum_minion` within your local copy of the repository. There,
-execute `python3.9 pendulum_minion.py ddpg` in order to start the Minion. Both
-Master and Minion should report that a connection has been established and the
-Minion should start printing a wall of text.
+`lexci2/test_envs/pendulum_minion` within your local copy of the repository.
+There, execute `python3.9 pendulum_minion.py ddpg` in order to start the Minion.
+Both Master and Minion should report that a connection has been established and
+the Minion should start printing a wall of text.
 
 
 ## Tracking the Agent's Progress
