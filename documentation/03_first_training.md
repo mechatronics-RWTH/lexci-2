@@ -1,10 +1,9 @@
 # First Training
 
 Whether you want to familiarise yourself with LExCI or you'd like to verify that
-everything went smoothly during
-[installation](https://github.com/mechatronics-RWTH/lexci-2/blob/main/documentation/02_installation.md),
-the pendulum swing-up problem is a great place to start. It's the environment
-that was tackled in the
+everything went smoothly during [installation](02_installation.md), the pendulum
+swing-up problem is a great place to start. It's the environment that was
+tackled in the
 [LExCI paper](https://link.springer.com/article/10.1007/s10489-024-05573-0) and,
 as such, it naturally comes with pre-configured hyperparameter sets as well as
 an implementation of the Minion. All you need to do is to start the toolchain
@@ -28,9 +27,9 @@ on the chosen RL algorithm, others may be overridden by related options, and
 still others might be internally overwritten by LExCI.
 
 Templates for each supported RL algorithm can be found in the folders of LExCI's
-[Universal Masters](https://github.com/mechatronics-RWTH/lexci-2/tree/main/lexci2/universal_masters).
-Here, we'll use configuration files that have already been fine-tuned for the
-[pendulum environment](https://github.com/mechatronics-RWTH/lexci-2/tree/main/lexci2/test_envs/pendulum_minion).
+[Universal Masters](../lexci2/universal_masters). Here, we'll use configuration
+files that have already been fine-tuned for the
+[pendulum environment](../lexci2/test_envs/pendulum_minion).
 
 
 ## Starting the Master and the Minion

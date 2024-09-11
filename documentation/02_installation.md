@@ -2,8 +2,7 @@
 
 This is an extensive guide to installing LExCI on your computer(s). If you only
 need a quick summary of the most important commands, check out the
-[instructions in the read-me file](https://github.com/mechatronics-RWTH/lexci-2/blob/main/README.md#installation)
-of the repository.
+[instructions in the read-me file](../README.md#installation) of the repository.
 
 
 ## Virtual Environment
