@@ -221,6 +221,8 @@ To uninstall LExCI, open a terminal, activate its virtual environment, and type
 
 ## Notes
 
-This how-to was written for the following operating systems:
+This how-to was tested with the following operating systems:
 - Debian GNU/Linux 12 "bookworm"
+- Ubuntu MATE 22.04.4 LTS
 - Microsoft Windows 10
+- Microsoft Windows 11
