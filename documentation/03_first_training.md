@@ -2,7 +2,7 @@
 
 Whether you want to familiarise yourself with LExCI or you'd like to verify that
 everything went smoothly during
-[installation](https://github.com/mechatronics-RWTH/lexci-2/blob/main/documentation/01_installation.md),
+[installation](https://github.com/mechatronics-RWTH/lexci-2/blob/main/documentation/02_installation.md),
 the pendulum swing-up problem is a great place to start. It's the environment
 that was tackled in the
 [LExCI paper](https://link.springer.com/article/10.1007/s10489-024-05573-0) and,
