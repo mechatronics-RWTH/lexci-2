@@ -126,7 +126,10 @@ def install_lexci(top_level_dir_name: str, installation_dir_name: str) -> None:
         stderr=subprocess.DEVNULL,
     ) as proc:
         cmd = f"source {venv_activation_script}"
-        cmd += " && pip install setuptools==58.1.0 wheel==0.38.4 numpy==1.26.4"
+        cmd += (
+            " && python3.9 -m pip install setuptools==58.1.0 wheel==0.38.4"
+            + " numpy==1.26.4"
+        )
         proc.communicate(cmd)
         if proc.returncode != 0:
             logger.info("... failed.")
@@ -148,7 +151,7 @@ def install_lexci(top_level_dir_name: str, installation_dir_name: str) -> None:
         cwd=top_level_dir_name,
     ) as proc:
         cmd = f"source {venv_activation_script}"
-        cmd += " && pip install ."
+        cmd += " && python3.9 -m pip install ."
         proc.communicate(cmd)
         if proc.returncode != 0:
             logger.info("... failed.")
