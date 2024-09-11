@@ -3,7 +3,7 @@
 The **L**earning and **Ex**periencing **C**ycle **I**nterface (LExCI) is a
 framework for reinforcement learning (RL) with embedded systems. It bridges the
 gap between established, traditional RL-libraries and embedded devices with
-their inherent limitations and unique requirements. Specifically, it utilises
+their inherent limitations and unique requirements. In particular, it utilises
 [Ray/RLlib](https://github.com/ray-project/ray) for training agents and
 [TensorFlow](https://github.com/tensorflow/tensorflow)/[TensorFlow Lite Micro](https://github.com/tensorflow/tflite-micro)
 to model their neural networks.
@@ -34,7 +34,7 @@ installation.
    different location if you so prefer.
 3. Create the environment proper with `python3 -m venv ~/.venv/lexci2`. On
    Windows, you need to expand `~`, i.e. replace it with
-   `C:\Users\YOUR_USERNAME`.
+   `C:\Users\YOUR_USER_NAME`.
 4. Activate the virtual environment with `source ~/.venv/lexci2/bin/activate`
    on Linux or `~/.venv/lexci2/Scripts/Activate.ps1` on Windows. For the latter,
    you may have to
@@ -59,18 +59,18 @@ Should you want to remove the virtual environment, simply delete
    `apt install gcc gpp g++ gdb git` into a terminal.
 2. Activate the virtual environment.
 3. Run `python3 -m pip install pip==22.0.4` and then
-   `pip install setuptools==58.1.0 wheel==0.38.4` as newer versions of these
-   packages may not be able to install LExCI's dependencies.
+   `python3.9 -m pip install setuptools==58.1.0 wheel==0.38.4` as newer versions
+   of these packages may not be able to install LExCI's dependencies.
 4. Download or clone this repository and `cd` to its location. Check out a
    version tag and do not use the `main` branch!
-5. Run `pip install .`.
-6. Type `pip install matlabengine==VERSION` where `VERSION` is the latest
-   package version for your MATLAB installation. All available versions are
-   listed [here](https://pypi.org/project/matlabengine/#history). This step can
-   be skipped if you don't plan to automate MATLAB/Simulink.
+5. Run `python3.9 -m pip install .`.
+6. Type `python3.9 -m pip install matlabengine==VERSION` where `VERSION` is the
+   latest package version for your MATLAB installation. All available versions
+   are listed [here](https://pypi.org/project/matlabengine/#history). This step
+   can be skipped if you don't plan to automate MATLAB/Simulink.
 
 To uninstall LExCI, open a terminal, activate its virtual environment, and type
-`pip uninstall lexci-2`.
+`python3.9 -m pip uninstall lexci-2`.
 
 
 ### Windows
@@ -83,18 +83,18 @@ facilitate writing Minions.
 1. Open a PowerShell or Anaconda prompt.
 2. Activate the virtual environment.
 3. Run `python3 -m pip install pip==22.0.4` and then
-   `pip install setuptools==58.1.0 wheel==0.38.4` since newer versions of these
-   packages may not be able to install LExCI's dependencies.
+   `python3.9 -m pip install setuptools==58.1.0 wheel==0.38.4` since newer
+   versions of these packages may not be able to install LExCI's dependencies.
 4. Download or clone this repository and `cd` to its location. Check out a
    version tag and do not use the `main` branch!
-5. Run `pip install .`.
-6. Type `pip install matlabengine==VERSION` where `VERSION` is the latest
-   package version for your MATLAB installation. All available versions are
-   listed [here](https://pypi.org/project/matlabengine/#history). This step can
-   be skipped if you don't plan to automate MATLAB/Simulink.
+5. Run `python3.9 -m pip install .`.
+6. Type `python3.9 -m pip install matlabengine==VERSION` where `VERSION` is the
+   latest package version for your MATLAB installation. All available versions
+   are listed [here](https://pypi.org/project/matlabengine/#history). This step
+   can be skipped if you don't plan to automate MATLAB/Simulink.
 
 To uninstall LExCI, open a PowerShell or an Anaconda prompt, activate its
-virtual environment, and type `pip uninstall lexci-2`.
+virtual environment, and type `python3.9 -m pip uninstall lexci-2`.
 
 
 ## Publications
