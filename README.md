@@ -97,6 +97,14 @@ To uninstall LExCI, open a PowerShell or an Anaconda prompt, activate its
 virtual environment, and type `python3.9 -m pip uninstall lexci-2`.
 
 
+## Support
+
+If you have any questions, feel free to ask them on the repository's
+[Discussions page](https://github.com/mechatronics-RWTH/lexci-2/discussions).
+Bugs, feature requests, and the like should be reported/posted as
+[Issues](https://github.com/mechatronics-RWTH/lexci-2/issues).
+
+
 ## Publications
 
 - [Badalian, K., Koch, L., Brinkmann, T., Picerno, M., Wegener, M., Lee, S.-Y., Andert, J.: LExCI: A framework for reinforcement learning with embedded systems. Applied Intelligence (2024) https://doi.org/10.1007/s10489-024-05573-0](https://link.springer.com/article/10.1007/s10489-024-05573-0)
