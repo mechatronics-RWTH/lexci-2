@@ -108,6 +108,9 @@ If you have any questions, feel free to ask them on the repository's
 Bugs, feature requests, and the like should be reported/posted as
 [Issues](https://github.com/mechatronics-RWTH/lexci-2/issues).
 
+Inquiries concerning (research) projects involving LExCI can be sent via e-mail
+to: [lexci@mmp.rwth-aachen.de](mailto:lexci@mmp.rwth-aachen.de)
+
 
 ## Publications
 
