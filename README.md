@@ -8,6 +8,10 @@ their inherent limitations and unique requirements. In particular, it utilises
 [TensorFlow](https://github.com/tensorflow/tensorflow)/[TensorFlow Lite Micro](https://github.com/tensorflow/tflite-micro)
 to model their neural networks.
 
+<p align="center">
+    <img src="logo.svg" alt="LExCI's Logo"/>
+</p>
+
 
 ## Installation
 
