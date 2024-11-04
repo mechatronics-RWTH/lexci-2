@@ -140,22 +140,26 @@ tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cpp
 
 OBJS = $(addsuffix .o, $(basename $(SRCS)))
 
-all: libnnexec
-
+libnnexec: CC = g++
 libnnexec: $(OBJS)
-	g++ -std=c++11 -pedantic -o libnnexec.so -fPIC $(OBJS) -shared
+	$(CC) -std=c++11 -pedantic -o libnnexec.so -fPIC $(OBJS) -shared
+
+libnnexec_win: CC = x86_64-w64-mingw32-g++
+libnnexec_win: $(OBJS)
+	$(CC) -std=c++11 -pedantic -o nnexec.dll -fPIC $(OBJS) -shared \
+          -static-libgcc -static-libstdc++
 
 %.o: %.c
-	g++ -std=c++11 -pedantic -c -fPIC -O2 -I ./ $< -o $@
+	$(CC) -std=c++11 -pedantic -c -fPIC -O2 -I ./ $< -o $@
 
 %.o: %.cpp
-	g++ -std=c++11 -pedantic -c -fPIC -O2 -I ./ $< -o $@
+	$(CC) -std=c++11 -pedantic -c -fPIC -O2 -I ./ $< -o $@
 
 %.o: %.cc
-	g++ -std=c++11 -pedantic -c -fPIC -O2 -I ./ $< -o $@
+	$(CC) -std=c++11 -pedantic -c -fPIC -O2 -I ./ $< -o $@
 
 clean:
-	rm $(OBJS) libnnexec.so
+	rm -f $(OBJS) libnnexec.so nnexec.dll
 
 clean_objs:
-	rm $(OBJS)
+	rm -f $(OBJS)
