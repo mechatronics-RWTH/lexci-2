@@ -22,14 +22,22 @@ specific language governing permissions and limitations under the License.
 
 import ctypes
 import os
+import platform
 import numpy as np
 
 
-# Load the 'libnnexec' library and tell Python about the parameter and return
-# types of its functions
+# Load the 'nnexec' library and tell Python about the parameter and return types
+# of its functions
+platform_str = platform.platform()
+if platform_str.startswith("Linux"):
+    lib_name = "libnnexec.so"
+elif platform_str.startswith("Windows"):
+    lib_name = "nnexec.dll"
+else:
+    raise RuntimeError(f"Unsupported platform '{platform_str}'.")
 libnnexec = ctypes.CDLL(
     os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), "../nnexec/libnnexec.so"
+        os.path.dirname(os.path.abspath(__file__)), "..", "nnexec", lib_name
     )
 )
 
