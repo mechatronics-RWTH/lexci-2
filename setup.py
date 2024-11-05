@@ -41,45 +41,121 @@ class LexciInstallationCommand(install):
     """Class containing a custom installation command."""
 
     def run(self) -> None:
-        """Perform the installation. If on Linux, this will fist build the
-        `nnexec` library, run the standard installation procedure, and finally
-        patch RLlib."""
+        """Build the `nnexec` library, run the standard installation procedure,
+        and finally patch RLlib (if on Linux).
+        """
 
-        # If on Linux, build the C library for executing NNs
-        is_linux = platform.platform().startswith("Linux")
-        if is_linux:
+        # Build the library (if possible) and run the standard installation
+        # procedure
+        if LexciInstallationCommand.is_libnnexec_buildable():
             self._build_libnnexec()
-
-        # Run the standard installation procedure
         super().run()
-
-        # If on Linux, explicitly copy `libnnexec.so` and patch RLlib
-        if is_linux:
+        if LexciInstallationCommand.is_libnnexec_buildable():
             self._copy_libnnexec()
+
+        # On Linux, patch RLlib
+        if platform.platform().startswith("Linux"):
             self._patch_rllib()
 
-    def _build_libnnexec(self) -> None:
-        """Build the `nnexec` library."""
+    @staticmethod
+    def is_libnnexec_buildable() -> bool:
+        """Check whether the `nnexec` library can be built.
 
+        Returns:
+            - _: bool
+                  `True` if `nnexec` can be built on the platform, else `False`.
+        """
+
+        platform_str = platform.platform()
+        if platform_str.startswith("Linux"):
+            return True
+        elif platform_str.startswith("Windows"):
+            if "CYGWIN_PATH" in os.environ:
+                return True
+            else:
+                logger.warning(
+                    "The environment variable `CYGWIN_PATH` isn't set, so the"
+                    + " `nnexec` library will not be built. This means that you"
+                    + " won't be able to directly execute agents on this"
+                    + " system. Simply ignore this message if you don't need"
+                    + " that feature."
+                )
+                return False
+        else:
+            logger.warning(
+                "Unsupported platform '{platform_str}'. The `nnexec` library"
+                + " will not be built."
+            )
+            return False
+
+    def _build_libnnexec(self) -> None:
+        """Build the `nnexec` library.
+
+        Raises:
+            - RuntimeError:
+                  - If the system isn't Linux or Windows.
+                  - If the environment variable `CYGWIN_PATH` isn't set on
+                    Windows.
+        """
+
+        # The working directory of the build process
         path = os.path.join(
-            os.path.abspath(os.path.dirname(__file__)), "lexci2/nnexec"
+            os.path.abspath(os.path.dirname(__file__)), "lexci2", "nnexec"
         )
-        cmd = f"make -j`nproc` && make clean_objs"
+
+        # Set the platform-specific command
+        platform_str = platform.platform()
+        if platform_str.startswith("Linux"):
+            cmd = f"make libnnexec -j`nproc` && make clean_objs"
+        elif platform_str.startswith("Windows"):
+            # Ensure that the environment variable with the path to Cygwin has
+            # been set
+            if "CYGWIN_PATH" not in os.environ:
+                raise RuntimeError(
+                    "The environment variable `CYGWIN_PATH` has not been set."
+                )
+
+            cygwin_sh = os.path.join(
+                os.environ["CYGWIN_PATH"], "bin", "bash.exe"
+            )
+            cmd = (
+                f"{cygwin_sh} -c 'make libnnexec_win -j`nproc` && make"
+                + " clean_objs'"
+            )
+        else:
+            raise RuntimeError(f"Unsupported platform '{platform_str}'.")
+
+        # Run the process
         subprocess.run(cmd, shell=True, check=True, cwd=path)
 
     def _copy_libnnexec(self) -> None:
-        """Manually copy `libnnexec.so` into its intended destination as
-        setuptools fails to do that if the shared library isn't already present
-        by the time the script is run. Thus, one doesn't have to run the
-        installation twice.
+        """Manually copy `libnnexec.so`/`nnexec.dll` into its intended
+        destination as setuptools fails to do that if the shared library isn't
+        already present by the time the script is run. Thus, one doesn't have to
+        run the installation twice.
+
+        Raises:
+            - RuntimeError:
+                  - If the system isn't Linux or Windows.
         """
 
-        # Define source and target for copying `libnnexec.so`
+        # Define source and target for copying `libnnexec.so`/`nnexec.dll`
+        platform_str = platform.platform()
+        if platform_str.startswith("Linux"):
+            lib_name = "libnnexec.so"
+        elif platform_str.startswith("Windows"):
+            lib_name = "nnexec.dll"
+        else:
+            raise RuntimeError(f"Unsupported platform '{platform_str}'.")
         source = os.path.join(
             os.path.abspath(os.path.dirname(__file__)),
-            "lexci2/nnexec/libnnexec.so",
+            "lexci2",
+            "nnexec",
+            lib_name,
         )
-        destination = os.path.join(site.getsitepackages()[0], "lexci2/nnexec")
+        destination = os.path.join(
+            site.getsitepackages()[0], "lexci2", "nnexec"
+        )
 
         # Create the destination folder
         pathlib.Path(destination).mkdir(parents=True, exist_ok=True)
@@ -99,6 +175,7 @@ class LexciInstallationCommand(install):
         )
         # Get the absolute path to where Ray/RLlib has been installed
         import ray
+
         ray_path = os.path.abspath(os.path.dirname(ray.__file__))
 
         # Apply the patch
@@ -120,57 +197,60 @@ def main() -> None:
             + " environment or an Anaconda environment for that."
         )
 
+    required_packages = [
+        # ray[all]
+        "ray (==1.13.0)",
+        "click (==8.0.4)",
+        "grpcio (==1.43.0)",
+        "pandas (==2.1.1)",
+        "pyarrow (==6.0.1)",
+        "fsspec (==2024.3.1)",
+        "aiohttp (==3.9.5)",
+        "aiohttp_cors (==0.7.0)",
+        "colorful (==0.5.6)",
+        "py_spy (==0.3.14)",
+        "requests (==2.31.0)",
+        "gpustat (==1.1.1)",
+        "opencensus (==0.11.4)",
+        "prometheus_client (==0.13.1)",
+        "smart_open (==7.0.4)",
+        "uvicorn (==0.16.0)",
+        "starlette (==0.37.2)",
+        "fastapi (==0.111.0)",
+        "aiorwlock (==1.4.0)",
+        "tabulate (==0.9.0)",
+        "tensorboardX (==2.6)",
+        "kubernetes (==29.0.0)",
+        "urllib3 (==2.2.1)",
+        "opentelemetry_api (==1.1.0)",
+        "opentelemetry_sdk (==1.1.0)",
+        "opentelemetry_exporter_otlp (==1.1.0)",
+        "numpy (==1.26.4)",
+        "ray_cpp (==1.13.0)",
+        "kopf (==1.37.2)",
+        "dm_tree (==0.1.8)",
+        "gym (==0.21.0)",
+        "lz4 (==4.3.3)",
+        "matplotlib (==3.8.4)",
+        "scikit_image (==0.22.0)",
+        "pyyaml (==6.0.1)",
+        "scipy (==1.13.0)",
+        # Other dependencies
+        "tensorflow (==2.11.0)",
+        "gputil (==1.4.0)",
+        "asammdf (==7.3.14)",
+        "pydantic (==1.10.12)",
+        "psutil (==6.0.0)",
+        "black (==24.8.0)",
+    ]
+
     # Set platform-specific settings
     platform_str = platform.platform()
     if platform_str.startswith("Linux"):
-        required_packages = [
-            # ray[all]
-            # `ray` is installed in `LexciInstallationCommand._patch_rllib()`
-            # "ray (==1.13.0)",
-            "click (==8.0.4)",
-            "grpcio (==1.43.0)",
-            "pandas (==2.1.1)",
-            "pyarrow (==6.0.1)",
-            "fsspec (==2024.3.1)",
-            "aiohttp (==3.9.5)",
-            "aiohttp_cors (==0.7.0)",
-            "colorful (==0.5.6)",
-            "py_spy (==0.3.14)",
-            "requests (==2.31.0)",
-            "gpustat (==1.1.1)",
-            "opencensus (==0.11.4)",
-            "prometheus_client (==0.13.1)",
-            "smart_open (==7.0.4)",
-            "uvicorn (==0.16.0)",
-            "starlette (==0.37.2)",
-            "fastapi (==0.111.0)",
-            "aiorwlock (==1.4.0)",
-            "tabulate (==0.9.0)",
-            "tensorboardX (==2.6)",
-            "kubernetes (==29.0.0)",
-            "urllib3 (==2.2.1)",
-            "opentelemetry_api (==1.1.0)",
-            "opentelemetry_sdk (==1.1.0)",
-            "opentelemetry_exporter_otlp (==1.1.0)",
-            "numpy (==1.26.4)",
-            "ray_cpp (==1.13.0)",
-            "kopf (==1.37.2)",
-            "dm_tree (==0.1.8)",
-            "gym (==0.21.0)",
-            "lz4 (==4.3.3)",
-            "matplotlib (==3.8.4)",
-            "scikit_image (==0.22.0)",
-            "pyyaml (==6.0.1)",
-            "scipy (==1.13.0)",
-            # Other dependencies
-            "tensorflow (==2.11.0)",
-            "gputil (==1.4.0)",
-            "asammdf (==7.3.14)",
-            "pydantic (==1.10.12)",
-            "psutil (==6.0.0)",
-            "black (==24.8.0)",
-        ]
-        package_data = {"lexci2": ["nnexec/libnnexec.so"]}
+        # Remove `ray` here because it is installed in
+        # `LexciInstallationCommand._patch_rllib()`
+        required_packages.remove("ray (==1.13.0)")
+        package_data = {"lexci2": [os.path.join("nnexec", "libnnexec.so")]}
         entry_points = {
             "console_scripts": [
                 "Lexci2UniversalPpoMaster = lexci2.universal_masters.universal_ppo_master.universal_ppo_master:main",
@@ -179,19 +259,9 @@ def main() -> None:
             ]
         }
     elif platform_str.startswith("Windows"):
-        required_packages = [
-            "gym (==0.21.0)",
-            "tensorflow (==2.11.0)",
-            "pandas (==2.1.1)",
-            "dm_tree (==0.1.8)",
-            "gputil (==1.4.0)",
-            "asammdf (==7.3.14)",
-            "pydantic (==1.10.12)",
-            "pywin32 (==300.0)",
-            "psutil (==6.0.0)",
-            "black (==24.8.0)",
-        ]
         package_data = {}
+        if LexciInstallationCommand.is_libnnexec_buildable():
+            package_data["lexci2"] = [os.path.join("nnexec", "nnexec.dll")]
         entry_points = {}
     else:
         raise RuntimeError(f"Unsupported platform '{platform_str}'.")
