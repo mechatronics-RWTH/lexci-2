@@ -147,7 +147,7 @@ libnnexec: $(OBJS)
 libnnexec_win: CC = x86_64-w64-mingw32-g++
 libnnexec_win: $(OBJS)
 	$(CC) -std=c++11 -pedantic -o nnexec.dll -fPIC $(OBJS) -shared \
-          -static-libgcc -static-libstdc++
+          -static-libgcc -static-libstdc++ -static
 
 %.o: %.c
 	$(CC) -std=c++11 -pedantic -c -fPIC -O2 -I ./ $< -o $@
