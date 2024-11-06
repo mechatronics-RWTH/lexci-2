@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 """
 
 import os
+import copy
 import platform
 import site
 import subprocess
@@ -96,6 +97,9 @@ class LexciInstallationCommand(install):
                   - If the system isn't Linux or Windows.
                   - If the environment variable `CYGWIN_PATH` isn't set on
                     Windows.
+                  - If the environment variable `PATH` isn't set on Windows.
+                    This shouldn't happen under normal circumstances as it is
+                    used by the operating system.
         """
 
         # The working directory of the build process
@@ -104,6 +108,7 @@ class LexciInstallationCommand(install):
         )
 
         # Set the platform-specific command
+        env = copy.deepcopy(os.environ)
         platform_str = platform.platform()
         if platform_str.startswith("Linux"):
             cmd = f"make libnnexec -j`nproc` && make clean_objs"
@@ -114,19 +119,22 @@ class LexciInstallationCommand(install):
                 raise RuntimeError(
                     "The environment variable `CYGWIN_PATH` has not been set."
                 )
+            if "PATH" not in os.environ:
+                raise RuntimeError(
+                    "The environment variable `PATH` has not been saved."
+                )
 
-            cygwin_sh = os.path.join(
-                os.environ["CYGWIN_PATH"], "bin", "bash.exe"
-            )
-            cmd = (
-                f"{cygwin_sh} -c 'make libnnexec_win -j`nproc` && make"
-                + " clean_objs'"
-            )
+            # Add Cygwin's binaries to `PATH`
+            cygwin_bin_path = os.path.join(os.environ["CYGWIN_PATH"], "bin")
+            env["PATH"] = cygwin_bin_path + os.pathsep + os.environ["PATH"]
+
+            # Create the command string
+            cmd = "bash -c 'make libnnexec_win -j`nproc` && make clean_objs'"
         else:
             raise RuntimeError(f"Unsupported platform '{platform_str}'.")
 
         # Run the process
-        subprocess.run(cmd, shell=True, check=True, cwd=path)
+        subprocess.run(cmd, shell=True, check=True, cwd=path, env=env)
 
     def _copy_libnnexec(self) -> None:
         """Manually copy `libnnexec.so`/`nnexec.dll` into its intended
