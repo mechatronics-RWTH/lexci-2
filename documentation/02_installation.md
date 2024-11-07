@@ -179,19 +179,31 @@ One of LExCI's dependencies, [Ray/RLlib](https://github.com/ray-project/ray),
 offers limited support for Windows. As a result, only a partial installation of
 the framework is possible which, nevertheless, is helpful when writing Minions.
 
-01. Depending on the solution you've chosen for the virtual environment, open a
-    PowerShell (when using venv) or an Anaconda prompt.
-02. Activate the virtual environment with the respective command above.
-03. Downgrade `pip`, `setuptools`, and `wheel` since newer versions aren't able
+01. Download [Cygwin](https://www.cygwin.com/).
+02. Depending on the solution you've chosen for the virtual environment, open a
+    PowerShell (when using venv) or an Anaconda Powershell Prompt and `cd` to
+    Cygwin's download folder.
+03. Type `setup-x86_64.exe --no-admin` in order to run the installer without
+    administrator rights. Perform a standard installation and select the
+    following additional packages from **Devel** (you may have to change
+    **View** to **Category**):
+    - `make` (`>= 4.4.1-2`)
+    - `mingw64-x86_64-binutils` (`>= 2.43.1-1`)
+    - `mingw64-x86_64-gcc-core` (`>= 12.4.0-1`)
+    - `mingw64-x86_64-gcc-g++` (`>= 12.4.0-1`)
+04. Activate the virtual environment with the respective command above.
+05. Type `$Env:CYGWIN_PATH = "C:\path\to\cygwin64"` to store the path to
+    Cygwin's installation directory in an environment variable.
+06. Downgrade `pip`, `setuptools`, and `wheel` since newer versions aren't able
     to process the dependencies of the LExCI framework. Also install the version
     of NumPy that LExCI needs.
 
     ```
-    py -3.9 -m pip install pip==22.0.4
-    py -3.9 -m pip install setuptools==58.1.0 wheel==0.38.4 numpy==1.26.4
+    python -m pip install pip==22.0.4
+    python -m pip install setuptools==58.1.0 wheel==0.38.4 numpy==1.26.4
     ```
 
-04. Navigate to the destination of the repository on your computer and clone it:
+07. Navigate to the destination of the repository on your computer and clone it:
 
     ```
     cd /path/to/local/repo/location
@@ -208,14 +220,14 @@ the framework is possible which, nevertheless, is helpful when writing Minions.
 
     Alternatively, you can download the repository as a zip file from GitHub's
     web interface. Make sure to choose the right tag first, though.
-05. Type `py -3.9 -m pip install .` to start the setup procedure.
-06. If you intend to automate MATLAB/Simulink, type
-    `py -3.9 -m pip install matlabengine==VERSION` where `VERSION` is the latest
+08. Type `python -m pip install .` to start the setup procedure.
+09. If you intend to automate MATLAB/Simulink, type
+    `python -m pip install matlabengine==VERSION` where `VERSION` is the latest
     package version for your MATLAB installation. All available versions are
     listed [here](https://pypi.org/project/matlabengine/#history).
 
 To uninstall LExCI, open a terminal, activate its virtual environment, and type
-`py -3.9 -m pip uninstall lexci-2`.
+`python -m pip uninstall lexci-2`.
 
 
 ## Notes

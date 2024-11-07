@@ -84,21 +84,33 @@ LExCI cannot be fully installed on Windows as its `Master` needs
 the operating system. Nevertheless, a partial setup can be done in order to
 facilitate writing Minions.
 
-1. Open a PowerShell or Anaconda prompt.
-2. Activate the virtual environment.
-3. Run `python3 -m pip install pip==22.0.4` and then
-   `python3.9 -m pip install setuptools==58.1.0 wheel==0.38.4` since newer
+1. Download [Cygwin](https://www.cygwin.com/).
+2. Open a PowerShell or Anaconda Powershell Prompt and `cd` to Cygwin's download
+   folder.
+3. Type `setup-x86_64.exe --no-admin` in order to run the installer without
+   administrator rights. Perform a standard installation and select the
+   following additional packages from **Devel** (you may have to change **View**
+   to **Category**):
+   - `make` (`>= 4.4.1-2`)
+   - `mingw64-x86_64-binutils` (`>= 2.43.1-1`)
+   - `mingw64-x86_64-gcc-core` (`>= 12.4.0-1`)
+   - `mingw64-x86_64-gcc-g++` (`>= 12.4.0-1`)
+4. Activate the virtual environment.
+5. Type `$Env:CYGWIN_PATH = "C:\path\to\cygwin64"` to store the path to Cygwin's
+   installation directory in an environment variable.
+6. Run `python -m pip install pip==22.0.4` and then
+   `python -m pip install setuptools==58.1.0 wheel==0.38.4` since newer
    versions of these packages may not be able to install LExCI's dependencies.
-4. Download or clone this repository and `cd` to its location. Check out a
+7. Download or clone this repository and `cd` to its location. Check out a
    version tag and do not use the `main` branch!
-5. Run `python3.9 -m pip install .`.
-6. Type `python3.9 -m pip install matlabengine==VERSION` where `VERSION` is the
+8. Run `python -m pip install .`.
+9. Type `python -m pip install matlabengine==VERSION` where `VERSION` is the
    latest package version for your MATLAB installation. All available versions
    are listed [here](https://pypi.org/project/matlabengine/#history). This step
    can be skipped if you don't plan to automate MATLAB/Simulink.
 
-To uninstall LExCI, open a PowerShell or an Anaconda prompt, activate its
-virtual environment, and type `python3.9 -m pip uninstall lexci-2`.
+To uninstall LExCI, open a PowerShell or an Anaconda Powershell Prompt, activate
+its virtual environment, and type `python -m pip uninstall lexci-2`.
 
 
 ## Support
