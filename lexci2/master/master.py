@@ -372,14 +372,17 @@ class Master:
             # training steps (e.g. when using the DDPG agent).
             self._agent.set_cycle_no(self._cycle_no)
 
+            # Save NN
+            self._agent.save_checkpoint_file(self._checkpoint_dir)
+            self._agent.export_models(
+                os.path.join(self._nn_h5_dir, f"Cycle_{self._cycle_no}")
+            )
+
             # Perform a validation run if this cycle calls for one
-            if self._cycle_no % self._validation_interval == 0:
-                # Save NN
-                self._agent.save_checkpoint_file(self._checkpoint_dir)
-                self._agent.export_models(
-                    os.path.join(self._nn_h5_dir, f"Cycle_{self._cycle_no}")
-                )
-                # Run the validation
+            if (
+                self._validation_interval > 0
+                and self._cycle_no % self._validation_interval == 0
+            ):
                 try:
                     self._perform_validation_run()
                 except Exception as e:
