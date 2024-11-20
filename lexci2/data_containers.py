@@ -20,7 +20,6 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
 
-
 import copy
 import json
 import numpy as np
@@ -247,6 +246,16 @@ class Episode:
         """
 
         self.exps.append(copy.deepcopy(exp))
+
+    def append_experiences(self, exps: list[Experience]) -> None:
+        """Append a list of experiences to the episode.
+
+        Arguments:
+            - exps: list[Experience]
+                  The experiences to append.
+        """
+
+        self.exps.extend(copy.deepcopy(exps))
 
     def get_num_experiences(self) -> int:
         """Get the (current) number of experiences in the LExCI episode.
