@@ -249,6 +249,7 @@ def main() -> None:
         "asammdf (==7.3.14)",
         "pydantic (==1.10.12)",
         "psutil (==6.0.0)",
+        "ruamel.yaml (==0.18.6)",
         "black (==24.8.0)",
     ]
 
