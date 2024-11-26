@@ -276,7 +276,7 @@ def main() -> None:
         raise RuntimeError(f"Unsupported platform '{platform_str}'.")
 
     setup(
-        name="lexci-2",
+        name="lexci2",
         version="2.23.0",
         description="The Learning and Experiencing Cycle Interface (LExCI).",
         author="Kevin Badalian",
