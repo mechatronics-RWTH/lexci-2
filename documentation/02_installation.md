@@ -90,9 +90,10 @@ In order to create and activate LExCI's environment, do the following:
 04. Activate the environment with `~/.venv/lexci2/Scripts/Activate.ps1`. You may
     have to
     [change the execution policy of the PowerShell](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.security/set-executionpolicy?view=powershell-7.4)
-    for this (e.g. by typing `Set-ExecutionPolicy unrestricted` into a
-    PowerShell that you've opened as an administrator). The command line prompt
-    should start with `(lexci2)` when the environment is active.
+    for this (e.g. by typing
+    `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` into
+    the PowerShell). The command line prompt should start with `(lexci2)` when
+    the environment is active.
 
 The virtual environment can be deactivated by typing `deactivate`. Should you
 want to remove it altogether, simply delete `~/.venv/lexci2`.

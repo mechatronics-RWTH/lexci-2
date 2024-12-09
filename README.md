@@ -42,7 +42,10 @@ installation.
 4. Activate the virtual environment with `source ~/.venv/lexci2/bin/activate`
    on Linux or `~/.venv/lexci2/Scripts/Activate.ps1` on Windows. For the latter,
    you may have to
-   [change the execution policy of the PowerShell](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.security/set-executionpolicy?view=powershell-7.4).
+   [change the execution policy of the PowerShell](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.security/set-executionpolicy?view=powershell-7.4)
+   (e.g. by typing
+   `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` into
+   the PowerShell).
 
 Should you want to remove the virtual environment, simply delete
 `~/.venv/lexci2`.
