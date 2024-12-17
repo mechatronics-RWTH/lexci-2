@@ -22,7 +22,6 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 """
 
-
 from lexci2.lexci_env import LexciEnvConfig
 from lexci2.neural_network_modules.neural_networks.keras_neural_network import (
     KerasNeuralNetwork,
@@ -179,12 +178,15 @@ class NeuralNetworkModule(metaclass=ABCMeta):
                   The normalized observation.
         """
 
-        return transform_linear(
+        norm_obs = transform_linear(
             obs,
             self._env_config.obs_lb,
             self._env_config.obs_ub,
             self._env_config.norm_obs_lb,
             self._env_config.norm_obs_ub,
+        )
+        return np.clip(
+            norm_obs, self._env_config.norm_obs_lb, self._env_config.norm_obs_ub
         )
 
     def denormalize_obs(self, norm_obs: np.ndarray) -> np.ndarray:
@@ -199,13 +201,14 @@ class NeuralNetworkModule(metaclass=ABCMeta):
                   The regular observation.
         """
 
-        return transform_linear(
+        obs = transform_linear(
             norm_obs,
             self._env_config.norm_obs_lb,
             self._env_config.norm_obs_ub,
             self._env_config.obs_lb,
             self._env_config.obs_ub,
         )
+        return np.clip(obs, self._env_config.obs_lb, self._env_config.obs_ub)
 
     def normalize_action(self, action: np.ndarray) -> np.ndarray:
         """Transform an action into a normalized action.
