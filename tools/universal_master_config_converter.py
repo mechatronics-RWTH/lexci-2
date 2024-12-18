@@ -85,7 +85,6 @@ def main() -> None:
 
     # Update the template config and save it
     update(json_config, yaml_config)
-    yaml_config["master_config"]["obs_size"] = 14
     with open(cli_args.yaml_config_template, "w") as f:
         yaml.dump(yaml_config, f)
 
