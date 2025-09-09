@@ -93,8 +93,8 @@ class NeuralNetworkModule(metaclass=ABCMeta):
         if self._nn_data_fmt == "keras":
             self._nn = KerasNeuralNetwork(nn_data)
         elif self._nn_data_fmt == "tflite":
-            tensor_arena_size = kwargs.get("tensor_arena_size", 1000000)
-            self._nn = TfliteNeuralNetwork(nn_data, tensor_arena_size)
+            self._tensor_arena_size = kwargs.get("tensor_arena_size", 1000000)
+            self._nn = TfliteNeuralNetwork(nn_data, self._tensor_arena_size)
         else:
             raise ValueError(
                 "Unknown neural network data format" f" '{self._nn_data_fmt}'."
@@ -102,6 +102,20 @@ class NeuralNetworkModule(metaclass=ABCMeta):
 
         # Mapping used for (de-)normalizing discrete actions
         self._discrete_action_map = discrete_action_map
+
+    def update_nn_data(self, nn_data: bytes) -> None:
+        """Update the neural network.
+
+        Arguments:
+            - nn_data: bytes
+                  The new data of the neural network, i.e. its weights, biases,
+                  etc.
+        """
+
+        if self._nn_data_fmt == "keras":
+            self._nn = KerasNeuralNetwork(nn_data)
+        elif self._nn_data_fmt == "tflite":
+            self._nn = TfliteNeuralNetwork(nn_data, self._tensor_arena_size)
 
     def predict(self, norm_obs: np.ndarray, **kwargs) -> list[np.ndarray]:
         """Execute the neural network.
