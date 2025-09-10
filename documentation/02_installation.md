@@ -39,14 +39,14 @@ In order to create and activate LExCI's environment, do the following:
     02. As an administrator, install the software packages you'll need for
         building:
 
-        ```
+        ```bash
         apt install build-essential gcc gpp g++ gdb libssl-dev zlib1g-dev libncurses5-dev libncursesw5-dev libreadline-dev libsqlite3-dev libgdbm-dev libdb5.3-dev libbz2-dev libexpat1-dev liblzma-dev tk-dev libffi-dev uuid-dev
         ```
 
     03. `cd` to the extracted directory containing the source code.
     04. Run these commands as an administrator:
         
-        ```
+        ```bash
         ./configure --enable-shared
         make -j$(nproc --all)
         make altinstall
@@ -132,7 +132,7 @@ the whole virtual environment, run `conda env remove --name lexci2`.
 01. Open a terminal and install the required software packages as an
     administrator:
     
-    ```
+    ```bash
     apt install gcc gpp g++ gdb git
     ```
 
@@ -141,14 +141,14 @@ the whole virtual environment, run `conda env remove --name lexci2`.
     to process the dependencies of the LExCI framework. Also install the version
     of NumPy that LExCI needs.
 
-    ```
+    ```bash
     python3.9 -m pip install pip==22.0.4
     python3.9 -m pip install setuptools==58.1.0 wheel==0.38.4 numpy==1.26.4
     ```
 
 04. Navigate to the destination of the repository on your computer and clone it:
 
-    ```
+    ```bash
     cd /path/to/local/repo/location
     git clone https://github.com/mechatronics-RWTH/lexci-2.git
     ```
@@ -156,7 +156,7 @@ the whole virtual environment, run `conda env remove --name lexci2`.
     Then, `cd` into LExCI's folder and check out the version you want to install
     (Here, we're going with `v2.23.0`. Do not use the `main` branch!):
 
-    ```
+    ```bash
     cd ./lexci-2
     git checkout v2.23.0
     ```
@@ -199,14 +199,14 @@ the framework is possible which, nevertheless, is helpful when writing Minions.
     to process the dependencies of the LExCI framework. Also install the version
     of NumPy that LExCI needs.
 
-    ```
+    ```powershell
     python -m pip install pip==22.0.4
     python -m pip install setuptools==58.1.0 wheel==0.38.4 numpy==1.26.4
     ```
 
 07. Navigate to the destination of the repository on your computer and clone it:
 
-    ```
+    ```powershell
     cd /path/to/local/repo/location
     git clone https://github.com/mechatronics-RWTH/lexci-2.git
     ```
@@ -214,7 +214,7 @@ the framework is possible which, nevertheless, is helpful when writing Minions.
     Then, `cd` into LExCI's folder and check out the version you want to install
     (Here, we're going with `v2.23.0`. Do not use the `main` branch!):
 
-    ```
+    ```powershell
     cd ./lexci-2
     git checkout v2.23.0
     ```
