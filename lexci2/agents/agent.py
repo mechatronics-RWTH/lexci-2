@@ -264,6 +264,11 @@ class Agent(metaclass=ABCMeta):
             if v is not None:
                 model_file_name = os.path.join(model_folder_name, f"{k}.h5")
                 v.save(model_file_name, save_format="h5")
+                with open(model_file_name, "rb+") as f:
+                    s = f.read().replace(b'"_initializer"', b'"RandomNormal"')
+                    f.seek(0)
+                    f.truncate(0)
+                    f.write(s)
 
     @abstractmethod
     def get_nn(self) -> Functional:
