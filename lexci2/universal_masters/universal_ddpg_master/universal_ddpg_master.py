@@ -54,6 +54,14 @@ def main() -> None:
     arg_parser.add_argument(
         "config_yaml_file", type=str, help="YAML-formatted configuration file."
     )
+    arg_parser.add_argument(
+        "--only_export_initial_models",
+        help=(
+            "Export the initial models of the agent into the current directory"
+            " (and then quit)."
+        ),
+        action="store_true",
+    )
     cli_args = arg_parser.parse_args(sys.argv[1:])
 
     # Load the config YAML
@@ -89,6 +97,13 @@ def main() -> None:
     ddpg_config = DdpgAgent.get_default_trainer_config()
     ddpg_config.update(config["ddpg_config"])
     agent = DdpgAgent("agent0", env_config, ddpg_config)
+    if cli_args.only_export_initial_models:
+        agent.export_models("initial_models")
+        logger.info(
+            "Initial models exported into the folder 'initial_models' in the"
+            " current directory."
+        )
+        return
 
     # Create the Master
     start_ray()
