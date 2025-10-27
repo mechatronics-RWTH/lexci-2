@@ -426,10 +426,13 @@ class JsonEncoder(json.JSONEncoder):
         d = copy.deepcopy(dictionary)
 
         for k, v in d.items():
-            try:
-                json.dumps(v)
-            except:
-                d[k] = str(v)
+            if type(v) == np.ndarray:
+                d[k] = v.tolist()
+            else:
+                try:
+                    json.dumps(v)
+                except:
+                    d[k] = str(v)
 
         # Return the cleaned dictionary
         return d
