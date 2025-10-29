@@ -427,7 +427,8 @@ class JsonEncoder(json.JSONEncoder):
 
         for k, v in d.items():
             try:
-                d[k] = json.dumps(v)
+                # Check whether, in theory, the value could be serialized
+                json.dumps(v)
             except:
                 if type(v) == np.ndarray:
                     d[k] = v.tolist()
