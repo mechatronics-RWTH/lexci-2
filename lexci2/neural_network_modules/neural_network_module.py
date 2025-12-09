@@ -37,6 +37,7 @@ from lexci2.utils.transform import (
 
 from abc import ABCMeta, abstractmethod
 import copy
+import csv
 import numpy as np
 import logging
 
@@ -327,6 +328,94 @@ class NeuralNetworkModule(metaclass=ABCMeta):
                 + " domain of the neural network module's discrete action map."
             )
         return action
+
+    def rasterize_policy(
+        self, num_samples: np.ndarray, output_csv_file_name: str
+    ) -> None:
+        """Rasterize the policy model and write the results into a file.
+
+        Arguments:
+            - num_samples: np.ndarray
+                  An array with the number of samples to rasterize
+            - output_csv_file_name: str
+                  The name of the CSV file to write the results into.
+
+        Raises:
+            - ValueError
+                  - If the dimensions of `num_samples` don't match the
+                    observation space.
+        """
+
+        # Perform checks
+        if len(num_samples) != self._env_config.obs_size:
+            raise ValueError(
+                "The dimensions of `num_samples` don't match the observation"
+                " space."
+            )
+
+        # Create the observations
+        norm_obs_samples = []
+        for i, e in enumerate(num_samples):
+            norm_obs_lb = self._env_config.obs_lb
+            norm_obs_ub = self._env_config.obs_ub
+            norm_obs_samples.append(
+                np.linspace(norm_obs_lb[i], norm_obs_ub[i], e)
+            )
+        norm_obs_list = []
+        for idx in np.ndindex(*[len(e) for e in norm_obs_samples]):
+            norm_obs = [
+                norm_obs_samples[i][subidx] for e, subidx in enumerate(idx)
+            ]
+            norm_obs = np.array(norm_obs, dtype=np.float32)
+            norm_obs_list.append(norm_obs)
+
+        # Create the CSV file and rasterize the policy model
+        with open(output_csv_file_name, "w") as f:
+            fieldnames = [
+                *[f"norm_obs[{i}]" for i in range(self._env_config.obs_size)],
+                *[
+                    f"norm_action[{i}]"
+                    for i in range(self._env_config.action_size)
+                ],
+                *[f"denorm_obs[{i}]" for i in range(self._env_config.obs_size)],
+                *[
+                    f"denorm_action[{i}]"
+                    for i in range(self._env_config.action_size)
+                ],
+            ]
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            writer.writeheader()
+
+            # Infer actions and save the data
+            for norm_obs in norm_obs_list:
+                norm_action = self.get_norm_action(norm_obs, False)
+                denorm_obs = self.denormalize_obs(norm_obs)
+                if self._env_config.action_type == "discrete":
+                    denorm_action = self.denormalize_discrete_action(
+                        norm_action
+                    )
+                else:
+                    denorm_action = self.denormalize_action(norm_action)
+
+                row = {
+                    **{
+                        f"norm_obs[{i}]": norm_obs[i]
+                        for i in range(len(norm_obs))
+                    },
+                    **{
+                        f"norm_action[{i}]": norm_action[i]
+                        for i in range(len(norm_action))
+                    },
+                    **{
+                        f"denorm_obs[{i}]": denorm_obs[i]
+                        for i in range(len(denorm_obs))
+                    },
+                    **{
+                        f"denorm_action[{i}]": denorm_action[i]
+                        for i in range(len(denorm_action))
+                    },
+                }
+                writer.writerow(row)
 
     @abstractmethod
     def normalize_action_dist(self, action_dist: np.ndarray) -> np.ndarray:
