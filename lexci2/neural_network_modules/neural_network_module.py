@@ -364,7 +364,7 @@ class NeuralNetworkModule(metaclass=ABCMeta):
         norm_obs_list = []
         for idx in np.ndindex(*[len(e) for e in norm_obs_samples]):
             norm_obs = [
-                norm_obs_samples[i][subidx] for e, subidx in enumerate(idx)
+                norm_obs_samples[i][subidx] for i, subidx in enumerate(idx)
             ]
             norm_obs = np.array(norm_obs, dtype=np.float32)
             norm_obs_list.append(norm_obs)
